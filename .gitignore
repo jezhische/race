@@ -4,3 +4,13 @@
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/workspace.xml
+/target/classes/Main.class
+/target/classes/TaskData
+/target/classes/TaskDataUpdate1
+/target/classes/cars/BmwCar.class
+/target/classes/cars/FerrariCar.class
+/target/classes/cars/MashkaCar.class
+/target/classes/cars/Vehicle.class
+/target/classes/supportedClasses/Bookmaker.class
+/target/classes/supportedClasses/Printer.class
+/target/classes/supportedClasses/Sorter.class

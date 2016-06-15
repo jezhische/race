@@ -34,6 +34,7 @@ public class Bookmaker extends Vehicle {
                     }
             }
         }
+        // adding comment for testing branch switching
 
 //        while (exitCycle) {
 //            i++;
