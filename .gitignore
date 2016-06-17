@@ -4,8 +4,6 @@
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/workspace.xml
-/pom.xml
-/race.iml
 /target/classes/Main.class
 /target/classes/TaskData
 /target/classes/TaskDataUpdate1
