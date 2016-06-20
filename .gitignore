@@ -15,3 +15,5 @@
 /target/classes/supportedClasses/Printer.class
 /target/classes/supportedClasses/Sorter.class
 /race.iml
+/.idea/race.iml
+/.idea/*.*
