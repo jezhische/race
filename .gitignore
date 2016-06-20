@@ -20,3 +20,4 @@
 /target/*.*
 /target/classes/*.*
 /target/classes/pilotProbesData/*.*
+/target/classes/pilotProbesData/*.txt
