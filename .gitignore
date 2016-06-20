@@ -19,3 +19,6 @@
 /.idea/*.*
 /.idea/*
 /target/*
+/target/classes/*
+/target/classes/pilotProbes/*
+/target/classes/pilotProbes/.*

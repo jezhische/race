@@ -1,7 +1,7 @@
 git push origin :serverfix - removing remote branch
 
 git commit --amend - change last commit
-ESC + :wq + Enter - quit from vim redactor
+Insert + ESC + :wq + Enter - quit from vim redactor
 
 $ git stash
 Saved working directory and index state \
