@@ -20,5 +20,7 @@
 /.idea/*
 /target/*
 /target/classes/*
-/target/classes/pilotProbes/*
-/target/classes/pilotProbes/.*
+/target/classes/pilotProbesData/*
+/target/classes/pilotProbesData/Probe1.txt
+/target/classes/pilotProbesData/*.txt
+/target
