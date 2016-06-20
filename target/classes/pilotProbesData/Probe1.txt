@@ -1,1 +1,0 @@
-"mashka", "cars.MashkaCar", "45" ,"600", "0.9"
