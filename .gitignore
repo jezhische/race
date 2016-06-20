@@ -17,8 +17,5 @@
 /race.iml
 /.idea/race.iml
 /.idea/*.*
-/target/*.*
-/target/classes/*.*
-/target/classes/pilotProbesData/*.*
-/target/classes/pilotProbesData/*.txt
-
+/.idea/*
+/target/*
