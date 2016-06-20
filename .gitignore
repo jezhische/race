@@ -24,3 +24,8 @@
 /target/classes/pilotProbesData/Probe1.txt
 /target/classes/pilotProbesData/*.txt
 /target
+/someGitBahsCommands.txt
+/debugger.xml
+/IntelliLang.xml
+/web-browsers.xml
+/_windows
