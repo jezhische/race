@@ -1,3 +1,7 @@
+For all new git repositories after creating:
+git config --global --unset core.autocrlf 
+git config core.autocrlf false
+
 git push origin :serverfix - removing remote branch
 
 git commit --amend - change last commit
