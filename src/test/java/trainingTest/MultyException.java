@@ -12,5 +12,6 @@ public class MultyException {
             throw new Exception("SecondException occured");
         }
         return "Hello, " + name;
+        //недописано - какие-то тут нестыковки...
     }
 }

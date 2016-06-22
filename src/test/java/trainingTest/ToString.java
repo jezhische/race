@@ -36,7 +36,7 @@ public class ToString {
         System.out.println(b);
 
         System.out.println("\nTest 3 | b[].toString");
-        System.out.println(b.toString());
+        System.out.println(b.toString()); //NOTE: object.toString()
 
         System.out.println("\nTest 4 | Arrays.deepToString(b[])");
         System.out.println(Arrays.deepToString(b));
