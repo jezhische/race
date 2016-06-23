@@ -9,6 +9,7 @@ import java.io.IOException;
 public class Test1ReadingFile {
     public static void main(String[] args) {
 // https://docs.oracle.com/javase/7/docs/api/
+        // http://metanit.com/java/tutorial/6.2.php
         FileInputStream fin=null;
         try
         {
