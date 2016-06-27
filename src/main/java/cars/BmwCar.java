@@ -4,7 +4,9 @@ package cars;
  * Created by Ежище on 29.05.2016.
  */
 public class BmwCar extends Vehicle {
-    /** checkInTime - the calculated time of the whole race */
+    /**
+     * checkInTime - the calculated time of the whole race
+     */
     public BmwCar(String name, double acceleration, double fullSpeed, double mobility) {
         this.name = name;
         setAcceleration(acceleration);
@@ -22,7 +24,7 @@ public class BmwCar extends Vehicle {
             registeredTime += directSegmentTime;
             initialSpeed = terminalSpeed * mobility;
             if (terminalSpeed <= fullSpeed / (3.6 * 2))
-                acceleration *= 2;
+                setAcceleration(getAcceleration() * 2);
         }
         return this;
     }

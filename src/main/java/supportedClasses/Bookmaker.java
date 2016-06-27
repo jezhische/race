@@ -33,6 +33,7 @@ public class Bookmaker extends Vehicle {
                         break;
                     }
             }
+            scanDataInputTypeChoice.close();
         }
         // adding comment for testing branch switching
         // adding new comment for testing branch switching

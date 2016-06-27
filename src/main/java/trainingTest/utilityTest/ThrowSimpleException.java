@@ -1,6 +1,6 @@
 package trainingTest.utilityTest;
 
-import utility.SimpleException;
+import trainingTest.utility.SimpleException;
 
 /**
  * Created by Ежище on 21.06.2016.

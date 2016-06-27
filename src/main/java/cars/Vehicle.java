@@ -7,7 +7,7 @@ public class Vehicle {
     /** the length of each straight segment, m */
     final static int spacing = 2000;
     /** the acceleration of the car, m/sec^2 */
-    double acceleration; //здесь везде достаточно package access.
+   private  double acceleration; //здесь везде достаточно package access.
     /** the maneuverability of the car when cornering */
     double mobility;
     /** the car full speed, km/h */
@@ -31,7 +31,44 @@ public class Vehicle {
 //            this.acceleration = 0;
         }
     }
-     void setMobility(double mobility){
+
+    public double getAcceleration() {
+        return acceleration;
+    }
+
+    public double getMobility() {
+        return mobility;
+    }
+
+    public double getFullSpeed() {
+        return fullSpeed;
+    }
+
+    public double getRegisteredTime() {
+        return registeredTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getDirectSegmentTime() {
+        return directSegmentTime;
+    }
+
+    public double getInitialSpeed() {
+        return initialSpeed;
+    }
+
+    public double getTerminalSpeed() {
+        return terminalSpeed;
+    }
+
+    public boolean isCheckParameters() {
+        return checkParameters;
+    }
+
+    void setMobility(double mobility){
         if (1 >= mobility && mobility >= 0)
             this.mobility = mobility;
         else {

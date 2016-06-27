@@ -6,12 +6,8 @@ import cars.Vehicle;
  * Created by uaTex_32 on 19.05.2016.
  */
 public class Printer {
-    Vehicle vehicle;
-    Printer(Vehicle vehicle) {
-       this.vehicle = vehicle;
-    }
 
-    public void printData(){
+    public static void printData(Vehicle vehicle){
         if (vehicle.checkParameters)
             System.out.println("Ошибка: исходные данные автомобиля " + vehicle.name + " введены неверно. Автомобиль дисквалифицирован.");
         else {

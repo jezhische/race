@@ -1,4 +1,4 @@
-package utility;
+package trainingTest.utility;
 
 /**
  * Created by Ежище on 21.06.2016.

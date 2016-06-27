@@ -8,7 +8,8 @@ import cars.Vehicle;
 public class Sorter {
     public Sorter() {
     }
-    public void sortVehicles(Vehicle unsortedCarList[]){
+
+    public void sortVehicles(Vehicle unsortedCarList[]) {
         /** сортировка результатов гонки: */
         for (int k = unsortedCarList.length; k >= 0; k--) {
             for (int j = 0; j < k - 1; j++) {
@@ -21,9 +22,8 @@ public class Sorter {
         }
         // Вместо цикла for организовываем foreach (т.е. значение вновь созданной переменной result
         // приравниваем последовательно к каждому из значений уже отсортированного массива unsortedCarList[]):
-        for (Vehicle vehicle: unsortedCarList
-                ) {
-            new Printer(vehicle).printData();
+        for (Vehicle vehicle : unsortedCarList) {
+            Printer.printData(vehicle);
         }
     }
 
