@@ -20,13 +20,16 @@ public class BmwCar extends Vehicle {
     public Vehicle goVehicle() {
         // Поехали по трассе:
         super.goVehicle();
-        for (int i = 0; i < 20; i++) {
-            registeredTime += directSegmentTime;
-            initialSpeed = terminalSpeed * mobility;
-            if (terminalSpeed <= fullSpeed / (3.6 * 2))
-                setAcceleration(getAcceleration() * 2);
+        if (checkParameters) {return this;}
+        else {
+            for (int i = 0; i < 20; i++) {
+                registeredTime += directSegmentTime;
+                initialSpeed = terminalSpeed * mobility;
+                if (terminalSpeed <= fullSpeed / (3.6 * 2))
+                    setAcceleration(getAcceleration() * 2);
+            }
+            return this;
         }
-        return this;
     }
 }
 

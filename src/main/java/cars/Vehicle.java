@@ -22,16 +22,34 @@ public class Vehicle {
     /** переменная для того, чтобы гневно ругаться при неправильно введенных исходниках */
     public boolean checkParameters = false;
 
-     void setAcceleration(double acceleration){
-        if (acceleration > 0)
+     public void setAcceleration(double acceleration){
+        if (acceleration >= 0)
             this.acceleration = acceleration;
         else {
             checkParameters = true;
-            System.out.println("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
+            System.out.println("Автомобиль " + name + ": ускорение не должно быть меньше 0: ошибка ввода.");
 //            this.acceleration = 0;
         }
     }
 
+    void setMobility(double mobility){
+        if (1 >= mobility && mobility >= 0)
+            this.mobility = mobility;
+        else {
+            checkParameters = true;
+            System.out.println("Автомобиль " + name + ": коэффициент потери скорости \"маневренность\" \nуказывается в пределах от 0 до 1: ошибка ввода.");
+//            this.mobility = 0;
+        }
+    }
+    void setFullSpeed(double fullSpeed){
+        if (fullSpeed > 0)
+            this.fullSpeed = fullSpeed;
+        else {
+            checkParameters = true;
+            System.out.println("Автомобиль " + name + ": максимальная скорость должна быть больше 0: ошибка ввода.");
+//            this.fullSpeed = 0/0;
+        }
+    }
     public double getAcceleration() {
         return acceleration;
     }
@@ -68,30 +86,13 @@ public class Vehicle {
         return checkParameters;
     }
 
-    void setMobility(double mobility){
-        if (1 >= mobility && mobility >= 0)
-            this.mobility = mobility;
-        else {
-            checkParameters = true;
-            System.out.println("Автомобиль " + name + ": коэффициент потери скорости \"маневренность\" \nуказывается в пределах от 0 до 1: ошибка ввода.");
-//            this.mobility = 0;
-        }
-    }
-    void setFullSpeed(double fullSpeed){
-        if (fullSpeed > 0)
-            this.fullSpeed = fullSpeed;
-        else {
-            checkParameters = true;
-            System.out.println("Автомобиль " + name + ": максимальная скорость должна быть больше 0: ошибка ввода.");
-//            this.fullSpeed = 0/0;
-        }
-    }
-
     Vehicle dataInput () {
         return this;
     }
 
-
+    private void zeroAccelerationMessage(){
+        System.out.println("Автомобиль остался на старте. Разбудите водителя!");
+    }
     /** the time of passing each whole direct segment */
     //Это метод для вычисления времени на прямом отрезке пути.
     public Vehicle goVehicle() {
@@ -108,7 +109,7 @@ public class Vehicle {
             directSegmentTime = spacing / initialSpeed;
             terminalSpeed = initialSpeed;
         } catch (ArithmeticException e) {
-            System.out.println("Автомобиль остался на старте. Разбудите водителя!");
+            zeroAccelerationMessage();
             //????? Блин!!!! Никакими силами не удается распечатать при исключении эту строчку!!!! ?????
         }
     }
