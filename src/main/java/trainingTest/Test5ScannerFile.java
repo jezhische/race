@@ -1,6 +1,7 @@
 package trainingTest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
@@ -10,7 +11,7 @@ import java.util.regex.MatchResult;
 public class Test5ScannerFile {
     public static void main(String[] args) {
         try (Scanner sc = new Scanner(new File("F://еж//программирование//мои примеры//aaa//race//src//main//" +
-                "resources//pilotProbesData//Test1.txt"))) {
+                "resources//pilotProbesData//Probe2.txt"))) {
 //            while (sc.hasNextDouble()) {
 //                double aDouble = sc.nextDouble();
 //                System.out.print(aDouble + " ");
@@ -21,13 +22,13 @@ public class Test5ScannerFile {
 
             }
         }
-        catch (Exception e) {
+        catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
         String input = "1 fish 2 fish red fish blue fish";
         Scanner s = new Scanner(input).useDelimiter("\\s*fish\\s*");
-        System.out.print("\n" + s.nextInt());
+        System.out.print("\n" + s.next());
         System.out.print(" " + s.nextInt());
         System.out.print(" " + s.next());
         System.out.print(" " + s.next());
