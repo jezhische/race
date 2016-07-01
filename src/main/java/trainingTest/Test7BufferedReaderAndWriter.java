@@ -11,8 +11,7 @@ public class Test7BufferedReaderAndWriter {
     public static void main(String[] args) {
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-             BufferedWriter bw = new BufferedWriter(new FileWriter("F://еж//программирование//мои примеры//aaa//race//" +
-                     "src//main//resources//pilotProbesData//Test3.txt"))) {
+             BufferedWriter bw = new BufferedWriter(new FileWriter("src//main//resources//pilotProbesData//Test3.txt"))) {
             // чтение построчно (readLine)
             String text;
             while (!(text = br.readLine()).equals("ESC")) { //NOTE нужно именно написать ESC и нажать на Enter,
