@@ -10,8 +10,7 @@ import java.io.IOException;
 public class Test3FileInputStreamByteArray {
     FileInputStream fin = null;
     void readByteArray() throws FileNotFoundException {
-        try(FileInputStream fin = new FileInputStream("F://еж//программирование//мои примеры//aaa//race//src//main//" +
-                "resources//pilotProbesData//Probe1.txt")) {
+        try(FileInputStream fin = new FileInputStream("src//main//resources//pilotProbesData//Probe1.txt")) {
             this.fin = fin;
             byte [] buffer = new byte [fin.available()];
             fin.read(buffer, 0, fin.available());

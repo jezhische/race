@@ -10,8 +10,7 @@ import java.util.regex.MatchResult;
  */
 public class Test5ScannerFile {
     public static void main(String[] args) {
-        try (Scanner sc = new Scanner(new File("F://еж//программирование//мои примеры//aaa//race//src//main//" +
-                "resources//pilotProbesData//Probe2.txt"))) {
+        try (Scanner sc = new Scanner(new File("src//main//resources//pilotProbesData//Probe2.txt"))) {
 //            while (sc.hasNextDouble()) {
 //                double aDouble = sc.nextDouble();
 //                System.out.print(aDouble + " ");

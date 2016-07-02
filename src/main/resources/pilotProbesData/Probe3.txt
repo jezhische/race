@@ -1,0 +1,5 @@
+["mashka", "cars.MashkaCar", "45" ,"600", "0.9"
+, "bmwovk", "cars.BmwCar", "13", "250", "0.8"
+, "ferrfurr", "cars.FerraryCar", "22", "300", "0.3"
+, "ferrylo", "cars.FerrariCar", "12", "130", "0.6", "mashito", "cars.MashkaCar", "28" ,"598.5", "0.7"
+, "bemeka", "cars.BmwCar", "150", "100", "0.5"]

@@ -45,8 +45,7 @@ public class Test4ReadingAndWritingFiles {
 
         String s1 = "Привет мир!";
         String s2 = "Hello World!";
-        try (PrintStream printStream = new PrintStream("F://еж//программирование//мои примеры//aaa//race//src//main//" +
-                "resources//pilotProbesData//Test1.txt")) {
+        try (PrintStream printStream = new PrintStream("src//main//resources//pilotProbesData//Test1.txt")) {
             printStream.println(s1);
             int i = 2;
             printStream.printf("Квадрат числа %d равен %d \n", i, i * i);
