@@ -3,7 +3,7 @@ package trainingTest;
 /**
  * Created by Ежище on 01.07.2016.
  */
-public class Test10Regex {
+public class Test10ARegex {
     public static void main(String[] args) {
         String str = "rd jhkjh, khjhv. jhik.,WWWjb      , амшлж; выро овы ghj . шир \n grkm;adc: WWWdckmdac , ihgjh . iihb \nohoj , " +
                 "\"mashka\", \"cars.MashkaCar\", \"45\", \"600\", \"0.9\"";
