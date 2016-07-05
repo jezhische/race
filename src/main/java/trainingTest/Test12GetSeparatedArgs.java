@@ -26,7 +26,9 @@ public class Test12GetSeparatedArgs {
             /* regex для освобождения от ненужной шелухи строчек, которые мы будем получать из файла: **/
             Pattern groupWordsPattern = Pattern.compile("\\w+(.\\w+)?");
             /* читаем файл по строкам: **/
-            while ((carFromFile = br.readLine()) != null) {
+            while ((carFromFile = br.readLine()) != null) { // TODO: здесь нужно писать исключение, потому что подборщик
+                    // нечаянно найти больше совпадений, чем 5 (больше, чем capacity String[] separateCarArgsFromFile)
+                    
                 /* создаем подборщик для написанного ранее регулярного выражения, применяем его
                 * в прочитанной строчке:**/
                 Matcher groupWordsMatcher = groupWordsPattern.matcher(carFromFile);
