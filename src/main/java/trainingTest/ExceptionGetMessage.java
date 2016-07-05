@@ -16,6 +16,15 @@ public class ExceptionGetMessage {
         catch (Exception ex){
             System.out.println(ex.getMessage());
         }
-
+//        try {
+//            directSegmentTime = spacing / initialSpeed;
+//            terminalSpeed = initialSpeed;
+//            if (initialSpeed == 0) {
+//                throw new Exception("Автомобиль остался на старте. Разбудите водителя!");
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+        // вот так, через throw new Exception и e.getMessage() проще всего получить распечатку нужного сообщения.
     }
 }

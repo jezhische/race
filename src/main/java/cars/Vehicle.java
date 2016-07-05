@@ -19,15 +19,15 @@ public class Vehicle {
     double initialSpeed = 0;
     /** the terminal car speed on each direct segment */
     double terminalSpeed;
-    /** переменная для того, чтобы гневно ругаться при неправильно введенных исходниках */
+    /** переменная для того, чтобы гневно ругаться при неправильно введенных исходниках: */
     public boolean checkParameters = false;
 
      public void setAcceleration(double acceleration){
-        if (acceleration >= 0)
+        if (acceleration > 0)
             this.acceleration = acceleration;
         else {
             checkParameters = true;
-            System.out.println("Автомобиль " + name + ": ускорение не должно быть меньше 0: ошибка ввода.");
+            System.out.println("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
 //            this.acceleration = 0;
         }
     }
@@ -90,9 +90,6 @@ public class Vehicle {
         return this;
     }
 
-    private void zeroAccelerationMessage(){
-        System.out.println("Автомобиль остался на старте. Разбудите водителя!");
-    }
     /** the time of passing each whole direct segment */
     //Это метод для вычисления времени на прямом отрезке пути.
     public Vehicle goVehicle() {
@@ -108,10 +105,7 @@ public class Vehicle {
         try {
             directSegmentTime = spacing / initialSpeed;
             terminalSpeed = initialSpeed;
-        } catch (ArithmeticException e) {
-            zeroAccelerationMessage();
-            //????? Блин!!!! Никакими силами не удается распечатать при исключении эту строчку!!!! ?????
-        }
+        } catch (ArithmeticException e) {}
     }
     else {
         timeFull = (-initialSpeed + Math.pow(Discriminant, 0.5)) / acceleration;//это формула +корня кв.уравн.

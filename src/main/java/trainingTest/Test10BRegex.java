@@ -59,6 +59,7 @@ public class Test10BRegex {
         }
 
 
+
 //        // check all occurance
 //        Pattern pattern = Pattern.compile("\\w+");
 //        // in case you would like to ignore case sensitivity,
