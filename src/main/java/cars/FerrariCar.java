@@ -5,15 +5,18 @@ package cars;
  */
 public class FerrariCar extends Vehicle {
     /** checkInTime - the calculated time of the whole race */
-
-    public FerrariCar(String name, double acceleration, double fullSpeed, double mobility) {
-        this.name = name;
-        setAcceleration(acceleration);
-        setFullSpeed(fullSpeed);
-        setMobility(mobility);
-//        if (fullSpeed <= 0 || acceleration <= 0 || mobility > 1 || mobility < 0 )
-//            checkParameters = true;
+    public FerrariCar (CarModel car) {
+        super(car);
     }
+
+//    public FerrariCar(String name, double acceleration, double fullSpeed, double mobility) {
+//        this.name = name;
+//        setAcceleration(acceleration);
+//        setFullSpeed(fullSpeed);
+//        setMobility(mobility);
+////        if (fullSpeed <= 0 || acceleration <= 0 || mobility > 1 || mobility < 0 )
+////            checkParameters = true;
+//    }
     @Override
     public Vehicle goVehicle () {
         // Поехали по трассе, но вначале вводим индекс k, который понадобится, если этот цикл прервется

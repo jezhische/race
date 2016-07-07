@@ -7,17 +7,18 @@ import cars.Vehicle;
  */
 public class Printer {
 
-    public static void printData(Vehicle vehicle){
+    public static String printData(Vehicle vehicle){
+        String result;
         if (vehicle.checkParameters)
-            System.out.println("Ошибка: исходные данные автомобиля " + vehicle.name + " введены неверно. Автомобиль дисквалифицирован.");
+            result = "Ошибка: исходные данные автомобиля " + vehicle.getName() + " введены неверно. Автомобиль дисквалифицирован.";
         else {
             int roundCheckInTime = (int) Math.round(vehicle.registeredTime);
             int hours = (int) Math.floor(roundCheckInTime / 3600);
             int min = (int) Math.floor((roundCheckInTime - hours * 3600) / 60);
             int sec = roundCheckInTime % 60;
-            System.out.println("Автомобиль " + vehicle.name + " прошел трассу за " + hours + " часов "
-                    + min + " минут " + sec + " секунд;");
+            result ="Автомобиль " + vehicle.getName() + " прошел трассу за " + hours + " часов "
+                    + min + " минут " + sec + " секунд;";
         }
-
+        return result;
     }
 }
