@@ -6,10 +6,11 @@ import cars.Vehicle;
  * Created by Ежище on 30.05.2016.
  */
 public class Sorter {
-    public Sorter() {
-    }
-
-    public void sortVehicles(Vehicle unsortedCarList[]) {
+//    public Sorter() {
+//    }
+    public static void sortVehicles(Vehicle unsortedCarList[]) {// TODO: если у меня здесь только 1 элемент в массиве, то
+        // получается IndexOutOfBoundException, поскольку метод обращается и к j=0, и к j=1 элементу. Хотя при проверке
+        // ошибки почему-то нет.
         /** сортировка результатов гонки: */
         for (int k = unsortedCarList.length; k >= 0; k--) {
             for (int j = 0; j < k - 1; j++) {
@@ -20,8 +21,7 @@ public class Sorter {
                 }
             }
         }
-        // Вместо цикла for организовываем foreach (т.е. значение вновь созданной переменной result
-        // приравниваем последовательно к каждому из значений уже отсортированного массива unsortedCarList[]):
+
         for (Vehicle vehicle : unsortedCarList) {
             Printer.printData(vehicle);
         }

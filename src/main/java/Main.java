@@ -1,6 +1,7 @@
 import cars.CarModel;
 import cars.MashkaCar;
 import cars.Vehicle;
+import supportedClasses.Printer;
 import supportedClasses.Sorter;
 
 /**
@@ -16,9 +17,11 @@ public class Main {
         car.fullSpeed = 160;
         car.mobility = 0.8;
         MashkaCar mashkaTest = new MashkaCar(car);
-        Vehicle unsortedCarList[] = {mashkaTest.goVehicle()};
-        Sorter sorter = new Sorter();
-        sorter.sortVehicles(unsortedCarList);
+//        mashkaTest.goVehicle();
+        Vehicle unsortedCarList[] = {mashkaTest.goVehicle()};//TODO: заменить Array на List. И вообще здесь
+        // не должен создаваться массив, д. идти вызов метода Sorter, который сам составит список и отсортирует.
+        Sorter.sortVehicles(unsortedCarList);
+        System.out.println(Printer.printData(mashkaTest));
 
         /** Гонка 1 */
 //        System.out.println("\nГонка 1\n");

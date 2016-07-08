@@ -47,11 +47,11 @@ public class Vehicle {
     }
 
     public void setName(String name) {
-        if (name == null)
+        if (name != null)
             this.name = name;
         else {
             checkParameters = true;
-            System.out.println("Не введено имя автомобиля");
+            System.out.println("Не введено имя автомобиля.");
         }
     }
 
@@ -84,6 +84,9 @@ public class Vehicle {
 //            this.fullSpeed = 0/0;
         }
     }
+    public String getName() {
+        return name;
+    }
 
     public double getAcceleration() {
         return acceleration;
@@ -99,10 +102,6 @@ public class Vehicle {
 
     public double getRegisteredTime() {
         return registeredTime;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public double getDirectSegmentTime() {
