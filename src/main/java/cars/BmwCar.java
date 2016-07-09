@@ -1,5 +1,7 @@
 package cars;
 
+import dataStorageAndProcessing.CarModel;
+
 /**
  * Created by Ежище on 29.05.2016.
  */

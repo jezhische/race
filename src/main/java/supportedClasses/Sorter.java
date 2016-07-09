@@ -23,7 +23,7 @@ public class Sorter {
         }
 
         for (Vehicle vehicle : unsortedCarList) {
-            Printer.printData(vehicle);
+            System.out.println(Printer.printData(vehicle));
         }
     }
 

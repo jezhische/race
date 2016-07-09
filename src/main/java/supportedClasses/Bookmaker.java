@@ -1,6 +1,6 @@
 package supportedClasses;
 
-import cars.CarModel;
+import dataStorageAndProcessing.CarModel;
 import cars.Vehicle;
 
 /**

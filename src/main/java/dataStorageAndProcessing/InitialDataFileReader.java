@@ -1,4 +1,4 @@
-package supportedClasses;
+package dataStorageAndProcessing;
 
 import cars.Vehicle;
 
@@ -28,24 +28,26 @@ public class InitialDataFileReader {
             Pattern groupWordsPattern = Pattern.compile("\\w+(.\\w+)?");
 //            Pattern groupWordsPattern = Pattern.compile("\"[\\w.]*\"");
             /* читаем файл по строкам: **/
-            while ((carFromFile = br.readLine()) != null) { // TODO: здесь нужно писать исключение, потому что подборщик
-                // нечаянно найти больше совпадений, чем 5 (больше, чем capacity String[] separateCarArgsFromFile)
+            while ((carFromFile = br.readLine()) != null) {
 
                 /* создаем подборщик для написанного ранее регулярного выражения, применяем его
                 * в прочитанной строчке:**/
                 Matcher groupWordsMatcher = groupWordsPattern.matcher(carFromFile);
-                /* Создаем новый массив, в который будут забиты очищенные от шелухи значения аргументов для одного
+                /* Создаем масив String, в который будут забиты очищенные от шелухи значения аргументов для одного
                 * автомобиля из файла (всего 5 аргументов): **/
+                // TODO: здесь нужно исключение, чтобы прочесть именно 5 правильно написанных переменных
                 String[] separateCarArgsFromFile = new String[5];
                 /* и забиваем группы символов типа "\\w+(.\\w+)?" в этот массив стрингов: **/
                 int j = 0;
-                while (groupWordsMatcher.find()) {
+                while (groupWordsMatcher.find()) {// TODO: здесь нужно писать исключение, потому что подборщик
+                    // нечаянно найти больше совпадений, чем 5 (больше, чем capacity of String[] separateCarArgsFromFile)
                     separateCarArgsFromFile[j] = groupWordsMatcher.group();
                     j++;
                 }
+                /* теперь прогоняем созданный масив через switch,  **/
                 /* теперь полученный массив загоняем в лист как элемент с соответствующим индексом,
                  * а затем возвращаемся в начало и читаем следующую строчку: **/
-                carsToRace.add(i, separateCarArgsFromFile);
+//                carsToRace.add(i, separateCarArgsFromFile);
 //                System.out.println(i + ". " + Arrays.deepToString(carsArgs.get(i))); // этот вывод на консоль
 //                // я оставил здесь временно, специально, чтобы убедиться, что массив, содержащий прочитанную
 //                // строчку, был записан под соответствующим индексом в лист.
