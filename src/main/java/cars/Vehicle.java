@@ -1,93 +1,156 @@
 package cars;
 
-import dataStorageAndProcessing.CarModel;
-
 /**
  * Created by Ежище on 04.05.2016.
  */
 public class Vehicle {
     /**
-     * the length of each straight segment, m
+     * the length of each straight segment, m:
      */
     final static int spacing = 2000;
-    /**
-     * the acceleration of the car, m/sec^2
-     */
-    private double acceleration; //здесь везде достаточно package access.
-    /**
-     * the maneuverability of the car when cornering
-     */
-    double mobility;
-    /**
-     * the car full speed, km/h
-     */
-    double fullSpeed;
-    public double registeredTime = 0;
+    /* name of the car **/
     private String name;
-    double directSegmentTime;
+    /* marker to get typr of the car if it's necessary **/
+    private String marker;
     /**
-     * the initial car speed on each direct segment
+     * the acceleration of the car, m/sec^2:
      */
-    double initialSpeed = 0;
+    private double acceleration;
     /**
-     * the terminal car speed on each direct segment
+     * the car full speed, km/h:
      */
-    double terminalSpeed;
+    private double fullSpeed;
+    /**
+     * the maneuverability of the car when cornering:
+     */
+    private double mobility;
+    /**
+     * registered time of the hole race:
+     */
+    private double registeredTime = 0;
+    /**
+     * the time of passing each whole direct segment:
+     */
+    private double directSegmentTime;
+    /**
+     * the initial car speed on each direct segment:
+     */
+    private double initialSpeed = 0;
+    /**
+     * the terminal car speed on each direct segment:
+     */
+    private double terminalSpeed;
     /**
      * переменная для того, чтобы гневно ругаться при неправильно введенных исходниках:
      */
-    public boolean checkParameters = false;
+    private boolean checkParameters = false;
 
 
-    public Vehicle(CarModel carModel) {
-        setName(carModel.name);
-        setAcceleration(carModel.acceleration);
-        setFullSpeed(carModel.fullSpeed);
-        setMobility(carModel.mobility);
+    public Vehicle(String name, String marker, double acceleration, double fullSpeed, double mobility) {
+        setName(name);
+        setAcceleration(acceleration);
+        setFullSpeed(fullSpeed);
+        setMobility(mobility);
+        setMarker(marker);
 //        if (getName() == null || fullSpeed <= 0 || getAcceleration() <= 0 || mobility > 1 || mobility < 0 )
 //            checkParameters = true;
     }
 
     public void setName(String name) {
-        if (name != null)
-            this.name = name;
-        else {
-            checkParameters = true;
-            System.out.println("Не введено имя автомобиля.");
+        try {
+            if (name != null)
+                this.name = name;
+            else {
+                checkParameters = true;
+                throw new Exception("Не введено имя автомобиля.");
+            }
+        } catch (Exception e) {
+            e.getMessage();
         }
+    }
+
+    public void setMarker(String marker) {
+        this.marker = marker;
     }
 
     public void setAcceleration(double acceleration) {
-        if (acceleration > 0)
-            this.acceleration = acceleration;
-        else {
-            checkParameters = true;
-            System.out.println("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
-//            this.acceleration = 0;
+        if (acceleration <= 0)
+            try {
+                checkParameters = true;
+                throw new Exception("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
+            }
+            catch (Exception e) {
+                e.getMessage();
+            }
+        else
+        this.acceleration = acceleration;
+//        try {
+//            if (acceleration > 0)
+//                this.acceleration = acceleration;
+//            else {
+//                checkParameters = true;
+//                throw new Exception("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
+//            }
+//        } catch (Exception e) {
+//            e.getMessage();
+//        }
+    }
+
+    public void setFullSpeed(double fullSpeed) {
+        try {
+            if (fullSpeed > 0)
+                this.fullSpeed = fullSpeed;
+            else {
+                checkParameters = true;
+                System.out.println("Автомобиль " + name + ": максимальная скорость должна быть больше 0: ошибка ввода.");
+    //            this.fullSpeed = 0/0;
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+    }
+
+    public void setMobility(double mobility) {
+        try {
+            if (1 >= mobility && mobility >= 0)
+                this.mobility = mobility;
+            else {
+                checkParameters = true;
+                throw new Exception("Автомобиль " + name + ": коэффициент потери скорости \"маневренность\" " +
+                        "\nуказывается в пределах от 0 до 1: ошибка ввода.");
+            }
+        } catch (Exception e) {
+            e.getMessage();
         }
     }
 
-    void setMobility(double mobility) {
-        if (1 >= mobility && mobility >= 0)
-            this.mobility = mobility;
-        else {
-            checkParameters = true;
-            System.out.println("Автомобиль " + name + ": коэффициент потери скорости \"маневренность\" \nуказывается в пределах от 0 до 1: ошибка ввода.");
-//            this.mobility = 0;
-        }
+    public void setRegisteredTime(double registeredTime) {
+        this.registeredTime = registeredTime;
     }
 
-    void setFullSpeed(double fullSpeed) {
-        if (fullSpeed > 0)
-            this.fullSpeed = fullSpeed;
-        else {
-            checkParameters = true;
-            System.out.println("Автомобиль " + name + ": максимальная скорость должна быть больше 0: ошибка ввода.");
-//            this.fullSpeed = 0/0;
-        }
+    public void setDirectSegmentTime(double directSegmentTime) {
+        this.directSegmentTime = directSegmentTime;
     }
+
+    public void setInitialSpeed(double initialSpeed) {
+        this.initialSpeed = initialSpeed;
+    }
+
+    public void setTerminalSpeed(double terminalSpeed) {
+        this.terminalSpeed = terminalSpeed;
+    }
+
+    public void setCheckParameters(boolean checkParameters) {
+        this.checkParameters = checkParameters;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getMarker() {
+        return marker;
     }
 
     public double getAcceleration() {
@@ -122,31 +185,24 @@ public class Vehicle {
         return checkParameters;
     }
 
-    Vehicle dataInput() { //TODO: обратить внимание: зачем мне этот метод?
-        return this;
-    }
 
-    /**
-     * the time of passing each whole direct segment
-     */
-    //Это метод для вычисления времени на прямом отрезке пути.
+    //Это метод для вычисления времени на прямом отрезке пути:
     public Vehicle goVehicle() {
+        /* максимально возможная скорость, если бы машина двигалась с равномерным ускорением и не было бы
+        * ограничений по максимальной скорости: **/
         double greatestPossibleSpeed;// m/sec
+        /* время движения машины с ускорением: **/
         double timeFull;// sec
+        /* отрезок пути, пройденный с ускорением: **/
         double spacingX;// m
+
+        // вычисляем время прохождения прямого участка пути по физической формуле: s = a*t^2/2+v0*t;
+        // в терминах задачи это: acceleration * timeFull^2 / 2 + initialSpeed * timeFull - spacing = 0;
 
         /** double Discriminant = discriminant of the quadratic equation;*/
         double Discriminant = Math.pow(initialSpeed, 2) - 4 * (acceleration / 2) * (-spacing);
-        // При нулевом ускорении: directSegmentTime=s/initialSpeed;
-        // Исключение для initialSpeed=0:
-        if (acceleration == 0) {
-            try {
-                directSegmentTime = spacing / initialSpeed;
-                terminalSpeed = initialSpeed;
-            } catch (ArithmeticException e) {
-            }
-        } else {
-            timeFull = (-initialSpeed + Math.pow(Discriminant, 0.5)) / acceleration;//это формула +корня кв.уравн.
+            timeFull = (-initialSpeed + Math.pow(Discriminant, 0.5)) / acceleration;//(это формула положительного
+        // корня кв.уравн.)
             /** Расчет скорости greatestPossibleSpeed и условие для fullSpeed: */
             greatestPossibleSpeed = initialSpeed + acceleration * timeFull;
             // Перевод м/с в км/ч: greatestPossibleSpeed*3600/1000 = greatestPossibleSpeed*3.6
@@ -160,7 +216,13 @@ public class Vehicle {
                 directSegmentTime = (fullSpeed / 3.6 - initialSpeed) / acceleration + (spacing - spacingX) / (fullSpeed / 3.6);
                 terminalSpeed = fullSpeed / 3.6;//Note: vTerminal = m/sec and fullSpeed = km/h.
             }
-        }
         return this;
+    }
+
+    public static void main(String[] args) {
+        Vehicle v = new Vehicle("v", "V", 12, 500, 0.3);
+        v.goVehicle();
+        System.out.println(v.terminalSpeed);
+
     }
 }

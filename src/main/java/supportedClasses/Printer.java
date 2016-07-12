@@ -8,11 +8,13 @@ import cars.Vehicle;
 public class Printer {
 
     public static String printData(Vehicle vehicle){
-        String result;
-        if (vehicle.checkParameters)
-            result = "Ошибка: исходные данные автомобиля " + (String)vehicle.getName() + " введены неверно. Автомобиль дисквалифицирован.";
+        String result = null;
+        if (vehicle.isCheckParameters()) {
+            result = "Ошибка: исходные данные автомобиля " + (String)vehicle.getName() + " введены неверно. " +
+                    "Автомобиль дисквалифицирован.";
+        }
         else {
-            int roundCheckInTime = (int) Math.round(vehicle.registeredTime);
+            int roundCheckInTime = (int) Math.round(vehicle.getRegisteredTime());
             int hours = (int) Math.floor(roundCheckInTime / 3600);
             int min = (int) Math.floor((roundCheckInTime - hours * 3600) / 60);
             int sec = roundCheckInTime % 60;

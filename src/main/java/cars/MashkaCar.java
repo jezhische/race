@@ -1,14 +1,12 @@
 package cars;
 
-import dataStorageAndProcessing.CarModel;
-
 /**
  * Created by Ежище on 28.05.2016.
  */
 public class MashkaCar extends Vehicle {
 
-    public MashkaCar (CarModel car) {
-        super(car);
+    public MashkaCar (String name, String marker, double acceleration, double fullSpeed, double mobility) {
+        super(name, marker, acceleration, fullSpeed, mobility);
     }
 
     //    public MashkaCar(String name, double acceleration, double fullSpeed, double mobility){
@@ -27,14 +25,14 @@ public class MashkaCar extends Vehicle {
         for (int i = 0; i < 20; i++){
 //            calcDirectTime(acceleration, fullSpeed);
             super.goVehicle();
-            registeredTime += directSegmentTime;
-            if (terminalSpeed <= fullSpeed / (3.6 * 2))
-                initialSpeed = terminalSpeed * mobility;
+            setRegisteredTime(getRegisteredTime()+getDirectSegmentTime());
+            if (getTerminalSpeed() <= getFullSpeed() / (3.6 * 2))
+               setInitialSpeed(getTerminalSpeed() * getMobility());
             else
-            if ((mobility + (terminalSpeed - fullSpeed / (3.6 * 2)) * 0.5 / 100) <= 1)
-                initialSpeed = terminalSpeed*(mobility+(terminalSpeed - fullSpeed / (3.6 * 2)) * 0.5 / 100);
+            if ((getMobility() + (getTerminalSpeed() - getFullSpeed() / (3.6 * 2)) * 0.5 / 100) <= 1)
+                setInitialSpeed(getTerminalSpeed()*(getMobility()+(getTerminalSpeed() - getFullSpeed() / (3.6 * 2)) * 0.5 / 100));
             else
-                initialSpeed = terminalSpeed;//имеется в виду initialSpeed=terminalSpeed*1;, поскольку здесь mobility=1.
+                setInitialSpeed(getTerminalSpeed());//имеется в виду initialSpeed=terminalSpeed*1, поскольку здесь mobility=1.
         }
         return this;
     }

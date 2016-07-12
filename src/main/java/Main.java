@@ -1,7 +1,6 @@
 import cars.MashkaCar;
 import cars.Vehicle;
-import dataStorageAndProcessing.CarModel;
-import supportedClasses.Sorter;
+import supportedClasses.Printer;
 
 /**
  * Created by Ежище on 23.05.2016.
@@ -9,18 +8,21 @@ import supportedClasses.Sorter;
 public class Main {
 
     public static void main(String[] args) {
+        Vehicle mashka = new MashkaCar("mashka", "cars.MashkaCar", -2, -180, 0.8);
+        mashka.goVehicle();
+        System.out.println(Printer.printData(mashka));
 
-        CarModel car = new CarModel();
-        car.name = "mashkaTest";
-        car.acceleration = 5.8;
-        car.fullSpeed = 160;
-        car.mobility = 0.8;
-        MashkaCar mashkaTest = new MashkaCar(car);
-//        mashkaTest.goVehicle();
-        Vehicle unsortedCarList[] = {mashkaTest.goVehicle()};//TODO: заменить Array на List. И вообще здесь
-        // не должен создаваться массив, д. идти вызов метода Sorter, который сам составит список и отсортирует.
-        // Либо сразу список закидывается в качестве вводных данных в сортировщик и сортируется.
-        Sorter.sortVehicles(unsortedCarList);
+//        CarModel car = new CarModel();
+//        car.name = "mashkaTest";
+//        car.acceleration = 5.8;
+//        car.fullSpeed = 160;
+//        car.mobility = 0.8;
+//        MashkaCar mashkaTest = new MashkaCar(car);
+////        mashkaTest.goVehicle();
+//        Vehicle unsortedCarList[] = {mashkaTest.goVehicle()};//TODO: заменить Array на List. И вообще здесь
+//        // не должен создаваться массив, д. идти вызов метода Sorter, который сам составит список и отсортирует.
+//        // Либо сразу список закидывается в качестве вводных данных в сортировщик и сортируется.
+//        Sorter.sortVehicles(unsortedCarList);
 
         /** Гонка 1 */
 //        System.out.println("\nГонка 1\n");
