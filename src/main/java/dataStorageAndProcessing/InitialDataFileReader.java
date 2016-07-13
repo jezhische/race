@@ -30,8 +30,7 @@ public class InitialDataFileReader {
             /* regex для освобождения от ненужной шелухи строчек, которые будут получены из файла: **/
             Pattern groupWordsPattern = Pattern.compile("\\w+(.\\w+)?");
 //            Pattern groupWordsPattern = Pattern.compile("\"[\\w.]*\"");
-            /* переменная для того, чтобы перескочить на чтение следующей строчки, если в данной найдена фатальная ошибка: **/
-            boolean checkFail = false;
+
             /* читаем файл по строкам: **/
             while ((carFromFile = br.readLine()) != null) {
 
@@ -41,7 +40,7 @@ public class InitialDataFileReader {
                 /* Создаем масив String, в который будут забиты очищенные от шелухи значения аргументов для одного
                 * автомобиля из файла (всего 5 аргументов) в качестве модели автомобиля: **/
                 String[] oneLineArgs = new String[5];
-                /* и забиваем группы символов типа "\\w+(.\\w+)?" в этот массив стрингов. При этом отлавливаем
+                /* и заливаем группы символов типа "\\w+(.\\w+)?" в этот массив стрингов. При этом отлавливаем
                  * возможный IndexOutOfBoundException с помощью блока try / catch: **/
                 int j = 0;
                 try {
@@ -54,6 +53,9 @@ public class InitialDataFileReader {
                             "избыточный параметр. Автомобиль снят с гонки.");
                     continue;
                 }
+                /* для игнорирования нулевых строчек: **/
+                if (oneLineArgs[1] == null)
+                    continue;
                 /* теперь прогоняем созданный масив через switch, чтобы выяснить, к какому классу относится данная
                  * модель и забить аргументы в соответствующий объект-автомобиль, а затем заносим объект-автомобиль
                   *  в список carsToRace. При этом отлавливаем NumberFormatException на случай, если в последних
@@ -102,6 +104,7 @@ public class InitialDataFileReader {
                     default:
                         System.out.println("Класс автомобиля " + oneLineArgs[0] + " объявлен неверно. Автомобиль" +
                                 " снят с гонки.");
+                        continue;
                 }
                 i++;
             }
