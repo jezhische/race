@@ -18,17 +18,17 @@ import java.util.regex.Pattern;
 public class InitialDataFileReader {
     /* Список, в котором будет храниться какое-то количество массивов со значениями аргументов, полученными из файла,
      * а также, возможно, еще и дополнительно забитыми вручную пользователем: **/
-    List<Vehicle> carsToRace = new ArrayList<>();
+    public List<Vehicle> carsToRace = new ArrayList<>();
 
-    void readArgsFromFile() {
+    public void readArgsFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader("src//main//resources//pilotProbesData//" +
-                "Probe3.txt"))) {
+                "Probe4.txt"))) {
             /* переменная для записи прочитанной строки: **/
             String carFromFile; // это будет прочитанная строчка
             /* счетчик прочитанных строк: **/
             int i = 0;
             /* regex для освобождения от ненужной шелухи строчек, которые будут получены из файла: **/
-            Pattern groupWordsPattern = Pattern.compile("\\w+(.\\w+)?");
+            Pattern groupWordsPattern = Pattern.compile("(-)?\\w+(.\\w+)?");
 //            Pattern groupWordsPattern = Pattern.compile("\"[\\w.]*\"");
 
             /* читаем файл по строкам: **/
@@ -44,10 +44,10 @@ public class InitialDataFileReader {
                  * возможный IndexOutOfBoundException с помощью блока try / catch: **/
                 int j = 0;
                 try {
-                        while (groupWordsMatcher.find()) {
-                                oneLineArgs[j] = groupWordsMatcher.group();
-                                j++;
-                        }
+                    while (groupWordsMatcher.find()) {
+                        oneLineArgs[j] = groupWordsMatcher.group();
+                        j++;
+                    }
                 } catch (Exception e) {
                     System.out.println("Параметры автомобиля " + oneLineArgs[0] + " объявлены неверно: найден " +
                             "избыточный параметр. Автомобиль снят с гонки.");
@@ -82,7 +82,7 @@ public class InitialDataFileReader {
                 параметров отсутствует: **/
                 if (acceleration <= 0 || fullSpeed <= 0 || mobility <= 0) {
                     System.out.println("Параметры автомобиля " + oneLineArgs[0] + " объявлены неверно: один из " +
-                            "числовых параметров равен 0. Автомобиль снят с гонки.");
+                            "числовых параметров равен 0 либо меньше 0. Автомобиль снят с гонки.");
                     continue;
                 }
                 if (mobility > 1) {
@@ -117,23 +117,13 @@ public class InitialDataFileReader {
     public static void main(String[] args) {
         InitialDataFileReader gsa = new InitialDataFileReader();
         gsa.readArgsFromFile();
-        System.out.println("acceleration of car 0 " + gsa.carsToRace.get(0).getName() + " = " +
-                gsa.carsToRace.get(0).getAcceleration());
-        System.out.println("acceleration of car 1 " + gsa.carsToRace.get(1).getName() + " = " +
-                gsa.carsToRace.get(1).getAcceleration());
-        System.out.println("acceleration of car 2 " + gsa.carsToRace.get(2).getName() + " = " +
-                gsa.carsToRace.get(2).getAcceleration());
-        System.out.println("acceleration of car 3 " + gsa.carsToRace.get(3).getName() + " = " +
-                gsa.carsToRace.get(3).getAcceleration());
-        System.out.println("acceleration of car 4 " + gsa.carsToRace.get(4).getName() + " = " +
-                gsa.carsToRace.get(4).getAcceleration());
-        System.out.println("acceleration of car 5 " + gsa.carsToRace.get(5).getName() + " = " +
-                gsa.carsToRace.get(5).getAcceleration());
-        System.out.println("acceleration of car 6 " + gsa.carsToRace.get(6).getName() + " = " +
-                gsa.carsToRace.get(6).getAcceleration());
-        System.out.println("acceleration of car 7 " + gsa.carsToRace.get(7).getName() + " = " +
-                gsa.carsToRace.get(7).getAcceleration());
-        System.out.println("acceleration of car 8 " + gsa.carsToRace.get(8).getName() + " = " +
-                gsa.carsToRace.get(8).getAcceleration());
+        int y = 0;
+        System.out.println(gsa.carsToRace.size());
+        while (y < gsa.carsToRace.size()) {
+            System.out.println("acceleration of car " + y + " " + gsa.carsToRace.get(y).getName() + " = " +
+                    gsa.carsToRace.get(y).getAcceleration());
+            y++;
+        }
+
     }
 }

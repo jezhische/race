@@ -10,5 +10,5 @@
 "", "", "15", "125", 0.6
 "bmwillo", "cars.BmwCar", "13", "250", "120"
 , "ferrillo", "FerrariCar", "22", "300", "0.3"
-"mashmash", "cars.MashkaCar", "38" ,"300", "0.8"
+"mashmash", "cars.MashkaCar", "-38" ,"300", "0.8"
 

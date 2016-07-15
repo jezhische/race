@@ -1,0 +1,16 @@
+"mashka", "cars.MashkaCar", "45" ,"600", "0.9"
+, "bmwovk", "cars.BmwCar", "13", "-250", "0.2"
+     ""
+
+, "ferrfurr", "cars.FerrariCar", "gp", "300", "0.3", "1525"
+, "mashito", "cars.MashkaCar", "28" ,"df.5", "0.7"
+, "bemeka", "cars.BmwCar", "150", "100", ""
+
+"ferrtt", "", "2.2", "180",
+"", "", "15", "125", 0.6
+"bmwillo", "cars.BmwCar", "13", "250", "120"
+, "ferrillo", "FerrariCar", "22", "300", "0.3"
+"mashmash", "cars.MashkaCar", "38" ,"300", "0.8"
+
+ "bmwuvk", "cars.BmwCar", "13", "250", "0.2"
+"ferrodo", "cars.FerrariCar", "22", "300", "0.3"
