@@ -1,0 +1,6 @@
+Создать list с объектами (с готовыми машинами), создать цикл. Цикл по очереди обращается к элементам листа carsArgs,
+при каждом проходе происходит следующее: если carsArgs.get(i)[1] = cars.MashkaCar, то создается обект
+Vehicle mashkaCar = new MashkaCar(carsArgs.get(i)[0], toDouble(carsArgs.get(i)[2]), toDouble(carsArgs.get(i)[3]), toDouble(carsArgs.get(i)[4])),
+и этот объект записывается в новый лист с готовыми машинами, и т.д.
+Но я не могу написать что-то вроде "new carsArgs.get(i)[1](carsArgs.get(i)[0], ......), хотя элемент списка carsArgs.get(i)[1]
+содержит название класса.

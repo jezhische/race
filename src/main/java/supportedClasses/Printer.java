@@ -6,22 +6,21 @@ import cars.Vehicle;
  * Created by uaTex_32 on 19.05.2016.
  */
 public class Printer {
-    Vehicle vehicle;
-    Printer(Vehicle vehicle) {
-       this.vehicle = vehicle;
-    }
 
-    public void printData(){
-        if (vehicle.checkParameters)
-            System.out.println("Ошибка: исходные данные автомобиля " + vehicle.name + " введены неверно. Автомобиль дисквалифицирован.");
+    public static String printData(Vehicle vehicle){
+        String result = null;
+        if (vehicle.isCheckParameters()) {
+            result = "Ошибка: исходные данные автомобиля " + (String)vehicle.getName() + " введены неверно. " +
+                    "Автомобиль дисквалифицирован.";
+        }
         else {
-            int roundCheckInTime = (int) Math.round(vehicle.registeredTime);
+            int roundCheckInTime = (int) Math.round(vehicle.getRegisteredTime());
             int hours = (int) Math.floor(roundCheckInTime / 3600);
             int min = (int) Math.floor((roundCheckInTime - hours * 3600) / 60);
             int sec = roundCheckInTime % 60;
-            System.out.println("Автомобиль " + vehicle.name + " прошел трассу за " + hours + " часов "
-                    + min + " минут " + sec + " секунд;");
+            result ="Автомобиль " + (String)vehicle.getName() + " прошел трассу за " + String.valueOf(hours) + " часов "
+                    + String.valueOf(min) + " минут " + String.valueOf(sec) + " секунд;";
         }
-
+        return result;
     }
 }

@@ -1,1 +1,2 @@
 "mashka", "cars.MashkaCar", "45" ,"600", "0.9"
+"bmwovk", "cars.BmwCar", "13", "250", "0.8"
