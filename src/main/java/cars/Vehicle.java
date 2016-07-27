@@ -1,5 +1,6 @@
 package cars;
 
+
 /**
  * Created by Ежище on 04.05.2016.
  */
@@ -58,15 +59,12 @@ public class Vehicle {
     }
 
     public void setName(String name) {
-        try {
             if (name != null)
                 this.name = name;
             else {
                 checkParameters = true;
                 System.out.println("Не введено имя автомобиля класса " + getMarker() + ".");
-                throw new Exception();
             }
-        } catch (Exception e) {}
     }
 
     public void setMarker(String marker) {
@@ -74,40 +72,43 @@ public class Vehicle {
     }
 
     public void setAcceleration(double acceleration) {
-        try {
+//        try {
             if (acceleration > 0)
                 this.acceleration = acceleration;
             else {
                 checkParameters = true;
-                System.out.println("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
-                throw new Exception();
+                System.out.printf("Автомобиль %s: ускорение должно быть больше 0: ошибка ввода.\n", name);
+//                throw new Exception();
             }
-        } catch (Exception e) {}
+//        } catch (Exception e) {}
     }
 
     public void setFullSpeed(double fullSpeed) {
-        try {
             if (fullSpeed > 0)
                 this.fullSpeed = fullSpeed;
             else {
                 checkParameters = true;
-                System.out.println("Автомобиль " + name + ": максимальная скорость должна быть больше 0: ошибка ввода.");
-                throw new Exception();
+                System.out.printf("Автомобиль %s: максимальная скорость должна быть больше 0: ошибка ввода.\n", name);
             }
-        } catch (Exception e) {}
     }
 
     public void setMobility(double mobility) {
-        try {
             if (1 >= mobility && mobility >= 0)
                 this.mobility = mobility;
             else {
                 checkParameters = true;
-                System.out.println("Автомобиль " + name + ": коэффициент потери скорости \"маневренность\" " +
-                        "указывается в пределах от 0 до 1: ошибка ввода.");
-                throw new Exception();
+                System.out.printf("Автомобиль %s: коэффициент потери скорости \"маневренность\" " +
+                        "указывается в пределах от 0 до 1: ошибка ввода.\n", name);
             }
-        } catch (Exception e) {}
+    }
+
+    // Метод для обнуления аргументов конструктора без ругательств со стороны сеттеров (нужен в InitialDataScannerSystemIn):
+    public void setNullConstructorArguments(){
+        name = null;
+        marker = null;
+        acceleration = 0;
+        fullSpeed = 0;
+        mobility = 0;
     }
 
     public void setRegisteredTime(double registeredTime) {
