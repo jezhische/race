@@ -28,16 +28,24 @@ public class InitialDataScannerSystemIn extends Vehicle {
     private boolean runCycle = true; // переменная для продолжения внешнего цикла в методе; когда false, происходит
     // выброс из цикла. Должна быть прописана в классе, поскольку иначе при обращении к ней из вложенных методов
     // она не будет меняться в аргументе внешнего цикла.
+    public boolean getRunCycle() {return runCycle;} // чтобы можно было при тестировании вызвать runCycle.
 
     private boolean continueCycle = false; // индикатор ошибки, при true цикл начинается сначала без занесения
     // автомобиля в список
 
     private int k = 0; // счетчик неправильных попыток юзера, чтобы он не пробовал бесконечно
+    public int getK() {return k;} // геттер, чтобы можно было при тестировании взвать k.
+    public void setK (int k) { // и все-таки сеттер, чтобы можно было при тестировании изменить k.
+        if (k >= 0 && k <= 3)
+            this.k = k;
+        else
+            this.k = 3;
+    }
 
     private int i = 0; // счетчик индекса автомобиля в листе private List<Vehicle> userCarsToRace.
 
     // метод для отслеживания неправильных попыток юзера и предупреждения об окончании программы:
-    private void printAppendix() {
+    public void printAppendix() {
         if (k == 3) {
             System.out.println("Ввод данных прерван. Пожалуйста, запустите программу снова.");
             runCycle = false;
