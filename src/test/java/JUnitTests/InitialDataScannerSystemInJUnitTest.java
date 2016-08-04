@@ -22,8 +22,8 @@ public class InitialDataScannerSystemInJUnitTest {
     public void init() throws IOException { // throws IOException - чтобы не вводить блок try-catch,
         // здесь мне это ни к чему, будет ошибка - все равно тест провален, продолжать дальше нет смысла.
         scan = new InitialDataScannerSystemIn();
-        printOutInFile = new PrintStream(("src\\main\\resources\\testSupport\\" +
-                "Test1ForOut_InitialDataScannerSystemIn.txt"));
+        printOutInFile = new PrintStream("src\\main\\resources\\testSupport\\" +
+                "Test1ForOut_InitialDataScannerSystemIn.txt");
         System.setOut(printOutInFile);// Тем самым перенаправили System.out в файл, который создается
         // потоком printOutInFile
         outReader = new BufferedReader(new FileReader("src\\main\\resources\\testSupport\\" +
