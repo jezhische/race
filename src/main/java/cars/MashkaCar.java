@@ -1,5 +1,7 @@
 package cars;
 
+import entities.CarModel;
+
 /**
  * Created by Ежище on 28.05.2016.
  */
@@ -8,6 +10,7 @@ public class MashkaCar extends Vehicle {
     public MashkaCar (String name, String marker, double acceleration, double fullSpeed, double mobility) {
         super(name, marker, acceleration, fullSpeed, mobility);
     }
+    public MashkaCar (CarModel carModel) { super(carModel);}
 
     //    public MashkaCar(String name, double acceleration, double fullSpeed, double mobility){
 //        super.name = name; // здесь вместо super годится также и this. Почему?

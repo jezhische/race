@@ -1,6 +1,8 @@
 package cars;
 
 
+import entities.CarModel;
+
 /**
  * Created by Ежище on 04.05.2016.
  */
@@ -47,6 +49,14 @@ public class Vehicle {
     private boolean checkParameters = false;
 
     public Vehicle(){};
+
+    public Vehicle (CarModel carModel) {
+        setName(carModel.name);
+        setMarker(carModel.marker);
+        setAcceleration(carModel.acceleration);
+        setFullSpeed(carModel.fullSpeed);
+        setMobility(carModel.mobility);
+    }
 
     public Vehicle(String name, String marker, double acceleration, double fullSpeed, double mobility) {
         setName(name);
