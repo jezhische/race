@@ -25,9 +25,9 @@ public class InitialDataScannerSystemIn {
 
     //метод выдает сообщения о нулевой строчке и увеличивает счетчик ошибочных вводов, после определенного количества
     // нулевых вводов выкидывает из цикла через CycleIsRunning = false; значение по дефолту false:
-    private boolean handleNullLine(String userInputFromScanner) {
+    private boolean isNullLine(String userInputFromScanner) {
         if (userInputFromScanner.equals("")) {
-            return breakWithAppendixPrinting();
+            return isBreakWithAppendixPrinting();
         }
         return false;
     }
@@ -62,9 +62,9 @@ public class InitialDataScannerSystemIn {
     }
 
     // метод для отслеживания количества неправильных попыток юзера и предупреждения об окончании ввода
-    // данных - вспомогательный метод для handleNullLine и для всех последующих методов проверки на ошибки,
-    // но не для breakDataInputWithEsc:
-    private boolean breakWithAppendixPrinting() {
+    // данных - вспомогательный метод для isNullLine и для всех последующих методов проверки на ошибки,
+    // но не для isDataInputBreakWithEsc:
+    private boolean isBreakWithAppendixPrinting() {
         if (errorCount <= 1) {
             printMessage(); // это конкретное описание ошибки - message из метода, который вызвал этот метод для
             // завершения цикла
@@ -91,13 +91,13 @@ public class InitialDataScannerSystemIn {
 
 //    private boolean isNoValue(ArrayList<String> oneLineArgs) {
 //        if (oneLineArgs.size() == 0) {
-//            return breakWithAppendixPrinting();
+//            return isBreakWithAppendixPrinting();
 //        }
 //        return false;
 //    }
 
     // метод для того, чтобы юзер мог закончить ввод данных и выйти из метода readUserData(); значение по дефолту false:
-    private boolean breakDataInputWithEsc( ArrayList<Vehicle> userCarsToRace, ArrayList<String> oneLineArgs) {
+    private boolean isDataInputBreakWithEsc(ArrayList<Vehicle> userCarsToRace, ArrayList<String> oneLineArgs) {
         if ((errorCount > 0 || !userCarsToRace.isEmpty()) && oneLineArgs.get(0).equals("esc")) {
             CycleIsRunning = false;
             message = "Вы закончили ввод данных. Если вы хотите начать гонку, введите RUN и нажмите Enter." +
@@ -122,7 +122,7 @@ public class InitialDataScannerSystemIn {
         if (oneLineArgs.size() > 5) {
             message = "Параметры автомобиля " + oneLineArgs.get(0) + " объявлены неверно: найден " +
                     "избыточный параметр. Автомобиль снят с гонки.";
-            return breakWithAppendixPrinting();
+            return isBreakWithAppendixPrinting();
         }
         return false;
     }
@@ -132,7 +132,7 @@ public class InitialDataScannerSystemIn {
         if (oneLineArgs.size() < 5) {
             message = "Параметры автомобиля " + oneLineArgs.get(0) + " объявлены неверно: не все параметры " +
                     "введены. Автомобиль снят с гонки.";
-            return breakWithAppendixPrinting();
+            return isBreakWithAppendixPrinting();
         }
         return false;
     }
@@ -148,20 +148,29 @@ public class InitialDataScannerSystemIn {
             message = "Числовые параметры автомобиля " + oneLineArgs.get(2) + " объявлены в неверном формате. " +
                     "Автомобиль снят с гонки.";
             printMessage();
-            return breakWithAppendixPrinting();
+            return isBreakWithAppendixPrinting();
         }
         return false;
     }
 
     // метод для проверки, совпадает ли параемтр oneLineArgs.get(1) с одним из классов автомобилей:
-    private boolean classMatcher(List<String> oneLineArgs) {
-        if (!oneLineArgs.get(1).equals("Mashka") || !oneLineArgs.get(1).equals("BMW") ||
-                !oneLineArgs.get(1).equals("Ferrari")) {
-        message = "Класс автомобиля " + oneLineArgs.get(0) + " объявлен неверно. Автомобиль" +
-                " снят с гонки.";
-        return breakWithAppendixPrinting();
-    }
-        return false;
+    private boolean isNoSuchClass(List<String> oneLineArgs) {
+        switch(oneLineArgs.get(1)) {
+            case "Mashka":
+            case "BMW":
+            case "Ferrari":
+                return false;
+            default:
+                message = "Неправильно указан класс автомобиля " + oneLineArgs.get(0) + ".";
+                return isBreakWithAppendixPrinting();
+        }
+//        if (!oneLineArgs.get(1).equals("Mashka") || !oneLineArgs.get(1).equals("BMW") ||
+//                !oneLineArgs.get(1).equals("Ferrari")) {
+//        message = "Класс автомобиля " + oneLineArgs.get(0) + " объявлен неверно. Автомобиль" +
+//                " снят с гонки.";
+//        return isBreakWithAppendixPrinting();
+//    }
+//        return false;
     }
 
     // метод для создания модели автомобиля на основе аргументов, очищенных парсером и забитых в лист oneLineArgs
@@ -181,12 +190,12 @@ public class InitialDataScannerSystemIn {
         if (carModel.acceleration <= 0 || carModel.fullSpeed <= 0) {
             message = "Неправильное значение параметров ускорения или максимальной скорости автомобиля"
                     + carModel.name + ": \nпараметры должны быть больше нуля. Автомобиль снят с гонки.";
-            return breakWithAppendixPrinting();
+            return isBreakWithAppendixPrinting();
         }
         else if (carModel.mobility > 1 || carModel.mobility <= 0) {
             message = "Недопустимое значение параметра мобильность автомобиля " + carModel.name + ": \nмобильность " +
                     "указывается в пределах больше нуля до 1 включительно. Автомобиль снят с гонки.";
-            return breakWithAppendixPrinting();
+            return isBreakWithAppendixPrinting();
         }
         return false;
     }
@@ -215,10 +224,11 @@ public class InitialDataScannerSystemIn {
     }
 
     // метод, чтобы проверить, не совпадает ли имя нового автомобиля с именем уже занесенного в список:
-    private boolean CarHasEqualName(Vehicle car, ArrayList<Vehicle> userCarsToRace) {
+    private boolean CarsHaveEqualNames(Vehicle car, ArrayList<Vehicle> userCarsToRace) {
         for (Vehicle listCar: userCarsToRace) {
             if (listCar.getName().equals(car.getName())) {
-                return breakWithAppendixPrinting();
+                message = "Автомобиль с именем " + listCar.getName() + " уже участвует в гонке. Введите другое имя.";
+                return isBreakWithAppendixPrinting();
             }
         }
         return false;
@@ -236,7 +246,7 @@ public class InitialDataScannerSystemIn {
             Scanner scanUserInput = new Scanner(System.in);
             String userInputFromScanner = scanUserInput.nextLine(); // это отсканированная (еще не очищенная) строчка.
             // ставим условие возвращения цикла в начало или выхода из цикла, если отсканированная строчка нулевая:
-            if (handleNullLine(userInputFromScanner)) {
+            if (isNullLine(userInputFromScanner)) {
                 continue;
             }
             // чистим, группируем символы и загоняем их в список аргументов для конструктора CarModel:
@@ -246,13 +256,13 @@ public class InitialDataScannerSystemIn {
 //                continue;
 //            }
             // проверяем, не ввел ли юзер команду "esc":
-            if (breakDataInputWithEsc(userCarsToRace, oneLineArgs)) {
+            if (isDataInputBreakWithEsc(userCarsToRace, oneLineArgs)) {
                 continue;
             }
             // проверяем, нет ли избыточных или недостаточных данных, а также, являются ли три последних параметра
             // числовыми, а также, соответствует ли второй параметр одному из классов автомобилей:
             if (inputDataQuantityIsMoreThanNecessary(oneLineArgs) || inputDataQuantityIsLessThanNecessary(oneLineArgs)
-                    || tryToDoubleValidator(oneLineArgs) || classMatcher(oneLineArgs)) {
+                    || tryToDoubleValidator(oneLineArgs) || isNoSuchClass(oneLineArgs)) {
                 continue;
             }
             // создаем экземпляр CarModel:
@@ -265,7 +275,7 @@ public class InitialDataScannerSystemIn {
             // создаем экземпляр автомобиля, сравниваем имя автомобиля с именами уже созданных ранее
             // и загоняем авто в список:
             Vehicle car = createCar(carModel);
-            if (CarHasEqualName(car, userCarsToRace)) {
+            if (CarsHaveEqualNames(car, userCarsToRace)) {
                 continue;
             } else {
                 userCarsToRace.add(car);
