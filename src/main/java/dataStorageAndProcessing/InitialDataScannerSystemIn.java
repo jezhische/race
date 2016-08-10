@@ -1,199 +1,294 @@
 package dataStorageAndProcessing;
 
-import cars.BmwCar;
-import cars.FerrariCar;
-import cars.MashkaCar;
-import cars.Vehicle;
+import cars.*;
+import entities.CarModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
+import java.util.regex.*;
 
 /**
  * Created by Ежище on 15.07.2016.
- * * Класс для составления и хранения списка автомобилей, параметры которых юзер забивает вручную с клавиатуры.
+ * * Класс для составления списка автомобилей, параметры которых юзер забивает вручную с клавиатуры. Основной метод
+ * класса readUserData() возвращает ArrayList с автомобилями в нем.
  */
-public class InitialDataScannerSystemIn extends Vehicle {
-    private List<Vehicle> userCarsToRace = new ArrayList<>(); // список автомобилей, введенных юзером вручную
+public class InitialDataScannerSystemIn {
 
-    public List<Vehicle> getUserCarsToRace() {
-        return userCarsToRace;
-    }
+    // переменные:
+    private int errorCount = 0; // счетчик неправильных попыток юзера, чтобы он не пробовал вводить неправильные
+    // данные бесконечно
+    private boolean CycleIsRunning = true; // переменная для продолжения основного цикла в методе; когда false,
+    // происходит выброс из цикла.
 
-    private List<String> oneLineArgs = new ArrayList<>(5); // сюда заносятся очищенные аргументы на 1 автомобиль.
-    // Это не массив, так что исключений при превышении емкости не будет, так что программа не будет выдавать ошибки.
+    // методы:
 
-    private boolean runCycle = true; // переменная для продолжения внешнего цикла в методе; когда false, происходит
-    // выброс из цикла. Должна быть прописана в классе, поскольку иначе при обращении к ней из вложенных методов
-    // она не будет меняться в аргументе внешнего цикла.
-
-    private boolean continueCycle = false; // индикатор ошибки, при true цикл начинается сначала без занесения
-    // автомобиля в список
-
-    private int k = 0; // счетчик неправильных попыток юзера, чтобы он не пробовал бесконечно
-
-    private int i = 0; // счетчик индекса автомобиля в листе private List<Vehicle> userCarsToRace.
-
-    // метод для отслеживания неправильных попыток юзера и предупреждения об окончании программы:
-    private void printAppendix() {
-        if (k == 3) {
-            System.out.println("Ввод данных прерван. Пожалуйста, запустите программу снова.");
-            runCycle = false;
-        } else if (k == 2) {
-            System.out.println("После следующей неправильной попытки ввода программа будет завершена.");
-        } else {
-            System.out.println("Введите следующий автомобиль, либо напечатайте esc и нажмите Enter " +
-                    "для перехода на следующий этап.");
+    //метод выдает сообщения о нулевой строчке и увеличивает счетчик ошибочных вводов, после определенного количества
+    // нулевых вводов выкидывает из цикла через CycleIsRunning = false; значение по дефолту false:
+    private boolean isNullLine(String userInputFromScanner) {
+        if (userInputFromScanner.equals("")) {
+            String message = null;
+            breakWithAppendixPrinting(message);
+            return true;
         }
+        return false;
     }
 
-    // Основной метод для считывания данных с консоли:
-    public void readUserData() {
+    // parser анализирует строчку, забитую юзером в консоли, разбивает на отдельные стринги и заносит в лист для
+    // последующего создания модели автомобиля, из которой затем будет создан автомобиль
+    private ArrayList<String> parser(String arg) {
         Pattern userGroupsPattern = Pattern.compile("(-)?\\w+(.\\w+)?"); // regex для очистки аргументов, заносимых
         // в конструктор new Vehicle, от пробелов, запятых и возможной иной шелухи.
-        // TODO: здесь нужно еще какую-нибудь RunTime Error, чтобы ожидание ввода не затянулось навечно. И предусмотреть
-        // возможность выхода: хотите выйти, нажмите Y...
-        while (runCycle) {
-//            if (k == 2) {
-//                System.out.println("После следующей неправильной попытки ввода программа будет завершена.");
-//            } else if (k == 3) {
-//                System.out.println("Ввод данных прерван. Пожалуйста, запустите программу снова.");
-//                runCycle = false;
-//                break;
-//            }
-            oneLineArgs.clear(); // почистили список от занесенных в него агрументов предыдущего автомобиля.
-            Scanner scanUserCar = new Scanner(System.in);
-            String userCarFromScanner = scanUserCar.nextLine(); // отсканированная (еще не очищенная) строчка
+        Matcher userGroupsMatcher = userGroupsPattern.matcher(arg);
+        ArrayList<String> oneLineArgs = new ArrayList<>(); // сюда заносятся очищенные аргументы на 1 автомобиль.
+        // Это не массив, так что исключений при превышении емкости не будет, так что программа не будет выдавать ошибки.
+        while (userGroupsMatcher.find()) {
+            oneLineArgs.add(userGroupsMatcher.group());
+        }
+        return oneLineArgs;
+    }
 
-//            System.out.println(oneLineArgs.get(0));
+    // с этого места парсером возвращен список аргуметов, пошли проверки, они д.быть атомарными и boolean, и
+    // принимать в аргументы список oneLineArgs, и менять message, и после каждой message нужно печатать
 
+    // TODO: что смущает в методах валидации введенных данных: они возвращают boolean, но при этом еще и
+    // меняют три переменные: errorCount, CycleIsRunning и message, и печатают message.
+    // Кроме того, получается типично процедурное программирование: "если - goto".
+    // Ну... возможно, нужно boolean проверочные методы сделать, чтобы они только возвращали true или false,
+    // и если возвращают true, то включаются другие методы, которые создают сообщение и меняют errorCount и CycleIsRunning
 
-            Matcher userGroupsMatcher = userGroupsPattern.matcher(userCarFromScanner);
-            int j = 0;
-            while (userGroupsMatcher.find()) {
-                oneLineArgs.add(j, userGroupsMatcher.group()); // заносим очищенные аргументы в список oneLineArgs
-                j++;
-            }
+    // метод для распечатки сообщения, если оно ненулевое:
+    private void printMessage(String message) {
+        if (message != null)
+            System.out.println(message);
+    }
 
+    // метод для отслеживания количества неправильных попыток юзера и предупреждения об окончании ввода
+    // данных - вспомогательный метод для isNullLine и для всех последующих методов проверки на ошибки,
+    // но не для isDataInputBreakWithEsc:
+    private void breakWithAppendixPrinting(String message) {
+        printMessage(message); // это конкретное описание ошибки - message из метода, который вызвал этот метод для
+        // завершения цикла
+        if (errorCount <= 1) {
+            message = "Введите параметры автомобиля либо напечатайте esc и нажмите Enter " +
+                    "для перехода на следующий этап.";
+            errorCount++;
+        } else if (errorCount == 3) {
+            message = "Ввод данных прерван. Пожалуйста, запустите программу снова.";
+            CycleIsRunning = false;
+        } else  {
+            message = "После следующей неправильной попытки ввода программа будет завершена.";
+            errorCount++;
+        }
+        printMessage(message);
+    }
 
-//            System.out.println(oneLineArgs.get(0));
+//    private boolean isNoValue(ArrayList<String> oneLineArgs) {
+//        if (oneLineArgs.size() == 0) {
+//            return breakWithAppendixPrinting();
+//        }
+//        return false;
+//    }
 
-            // Для игнорирования нулевых строчек:
-            if (oneLineArgs.size() == 0) {
-                System.out.println("Введите параметры автомобиля либо напечатайте esc и нажмите Enter " +
-                        "для перехода на следующий этап.");
-                if (k == 3) {
-                    System.out.println("Ввод данных прерван. Пожалуйста, запустите программу снова.");
-                    runCycle = false;
-                    break;
-                } else if (k == 2) {
-                    System.out.println("После следующей неправильной попытки ввода программа будет завершена.");
-                    k++;
-                    continue;
-                } else {
-                    k++;
-                    continue;
-                }
-            }
+    // метод для того, чтобы юзер мог закончить ввод данных и выйти из метода readUserData(); значение по дефолту false:
+    private boolean isDataInputBreakWithEsc(ArrayList<Vehicle> userCarsToRace, ArrayList<String> oneLineArgs) {
+        if ((errorCount > 0 || !userCarsToRace.isEmpty()) && oneLineArgs.get(0).equals("esc")) {
+            CycleIsRunning = false;
+            printMessage("Вы закончили ввод данных. Если вы хотите начать гонку, введите RUN и нажмите Enter." +
+                    "\nЕсли вы хотите также добавить готовый список автомобилей из файла, введите 2 и нажмите Enter.");
+            return true;
+        } else if (errorCount == 0 && userCarsToRace.isEmpty() && oneLineArgs.get(0).equals("esc")) { // смысл в том, что
+            // с самого начала юзер не знает команды esc для выхода; если в самом начале он наберет автомобиль с
+            // именем esc, то система его предупредит (с самого начала k == 0 && readUserData().isEmpty()). Потом,
+            // когда он забил в список первый автомобиль (!readUserData().isEmpty()) или сделал первую ошибку (k > 0),
+            // у него появляется сообщение об использовании esc для выхода, и он уже может пользоваться этой командой.
+            errorCount++;
+            printMessage("Имя esc зарезервировано как команда для перехода на следующий этап.");
+            return true;
+        }
+        return false;
+    }
 
-            // для выхода из программы:
-            if ((k > 0 || !userCarsToRace.isEmpty() || continueCycle) && oneLineArgs.get(0).equals("esc")) {
-                runCycle = false;
+    // метод на случай, если введено более 5 необходимых параметров:
+    private boolean inputDataQuantityIsMoreThanNecessary(ArrayList<String> oneLineArgs) {
+        String  message = null;
+        if (oneLineArgs.size() > 5) {
+            message = "Параметры автомобиля " + oneLineArgs.get(0) + " объявлены неверно: найден " +
+                    "избыточный параметр. Автомобиль снят с гонки.";
+            breakWithAppendixPrinting(message);
+            return true;
+        }
+        return false;
+    }
+
+    // метод на случай, если введено менее 5 необходимых параметров:
+    private boolean inputDataQuantityIsLessThanNecessary(ArrayList<String> oneLineArgs) {
+        String  message = null;
+        if (oneLineArgs.size() < 5) {
+            message = "Параметры автомобиля " + oneLineArgs.get(0) + " объявлены неверно: не все параметры " +
+                    "введены. Автомобиль снят с гонки.";
+            breakWithAppendixPrinting(message);
+            return true;
+        }
+        return false;
+    }
+
+    // метод для проверки, являются ли три последних параметра числовыми:
+    private boolean tryToDoubleValidator(List<String> oneLineArgs) {
+        String  message = null;
+        try {
+            double a = Double.valueOf(oneLineArgs.get(2));
+            double b = Double.valueOf(oneLineArgs.get(3));
+            double c = Double.valueOf(oneLineArgs.get(4));
+        }
+        catch (NumberFormatException e) {
+            message = "Числовые параметры автомобиля " + oneLineArgs.get(2) + " объявлены в неверном формате. " +
+                    "Автомобиль снят с гонки.";
+            breakWithAppendixPrinting(message);
+            return true;
+        }
+        return false;
+    }
+
+    // метод для проверки, совпадает ли параемтр oneLineArgs.get(1) с одним из классов автомобилей:
+    private boolean isNoSuchClass(List<String> oneLineArgs) {
+        String  message = null;
+        switch(oneLineArgs.get(1)) {
+            case "Mashka":
+            case "BMW":
+            case "Ferrari":
+                return false;
+            default:
+                message = "Неправильно указан класс автомобиля " + oneLineArgs.get(0) + ".";
+                breakWithAppendixPrinting(message);
+                return true;
+        }
+//        if (!oneLineArgs.get(1).equals("Mashka") || !oneLineArgs.get(1).equals("BMW") ||
+//                !oneLineArgs.get(1).equals("Ferrari")) {
+//        message = "Класс автомобиля " + oneLineArgs.get(0) + " объявлен неверно. Автомобиль" +
+//                " снят с гонки.";
+//        return breakWithAppendixPrinting();
+//    }
+//        return false;
+    }
+
+    // метод для создания модели автомобиля на основе аргументов, очищенных парсером и забитых в лист oneLineArgs
+    private CarModel carModelCreator(List<String> oneLineArgs) {
+        CarModel carModel = new CarModel();
+            carModel.name = oneLineArgs.get(0);
+            carModel.marker = oneLineArgs.get(1);
+            carModel.acceleration = Double.valueOf(oneLineArgs.get(2));
+            carModel.fullSpeed = Double.valueOf(oneLineArgs.get(3));
+            carModel.mobility = Double.valueOf(oneLineArgs.get(4));
+        return carModel;
+    }
+
+    // метод для проверки числовых параметров созданной модели автомобиля на предмет соответствия
+    // условиям конструктора автомобиля:
+    private boolean carModelValidator(CarModel carModel) {
+        String  message = null;
+        if (carModel.acceleration <= 0 || carModel.fullSpeed <= 0) {
+            message = "Неправильное значение параметров ускорения или максимальной скорости автомобиля "
+                    + carModel.name + ": \nпараметры должны быть больше нуля. Автомобиль снят с гонки.";
+            breakWithAppendixPrinting(message);
+            return true;
+        }
+        else if (carModel.mobility > 1 || carModel.mobility <= 0) {
+            message = "Недопустимое значение параметра мобильность автомобиля " + carModel.name + ": \nмобильность " +
+                    "указывается в пределах больше нуля до 1 включительно. Автомобиль снят с гонки.";
+            breakWithAppendixPrinting(message);
+            return true;
+        }
+        return false;
+    }
+
+    // метод для создания объекта Vehicle нужного типа (Mashka, BMW или Ferrari). Поскольку к сеттерам обращается CarModel,
+    // то все возможные ошибки должны были быть проброшены раньше, еще на этапе создания модели:
+    private Vehicle createCar(CarModel carModel) {
+        Vehicle car = new Vehicle();
+        String  message = null;
+        switch (carModel.marker) {
+            case "Mashka":
+                car = new MashkaCar(carModel);
                 break;
-            } else if ((k == 0 || userCarsToRace.isEmpty()) && oneLineArgs.get(0).equals("esc")){ // смысл в том, что
-                // с самого начала юзер не знает команды esc для выхода; если в самом начале он наберет автомобиль с
-                // именем esc, то система его предупредит (с самого начала k == 0 || userCarsToRace.isEmpty()). Потом,
-                // когда он забил в список первый автомобиль или сделал первую ошибку, у него появляется сообщение
-                // об использовании esc, и он уже может пользоваться этой командой. Впрочем,проще было указать это
-                // как условие в Bookmaker.
-                System.out.println("Имя esc зарезервировано как команда для перехода на следующий этап.");
-                continueCycle = true;
-                continue;
-            }
+            case "BMW":
+                car = new BmwCar(carModel);
+                break;
+            case "Ferrari":
+                car = new FerrariCar(carModel);
+                break;
+                    /* В дефолте сообщение о неопознанной ошибке **/
+            default:
+                message = "Автомобиль не обнаружен. Неопознанная ошибка.";
+                breakWithAppendixPrinting(message);
+                break;
+        }
+        return car;
+    }
 
-            if (oneLineArgs.size() > 5) {
-                System.out.printf("Параметры автомобиля %s объявлены неверно: найден " +
-                        "избыточный параметр. Автомобиль снят с гонки.\n", oneLineArgs.get(0));
-                printAppendix();
-                k++;
-                continue;
-            }
-            if (oneLineArgs.size() < 5) {
-                System.out.printf("Параметры автомобиля %s объявлены неверно: не все параметры " +
-                        "введены. Автомобиль снят с гонки.\n", oneLineArgs.get(0));
-                printAppendix();
-                k++;
-                continue;
-            }
-
-             /* теперь прогоняем созданный масив через switch, чтобы выяснить, к какому классу относится данная
-                 * модель и забить аргументы в соответствующий объект-автомобиль, а затем заносим объект-автомобиль
-                  *  в список carsToRace. При этом отлавливаем NumberFormatException на случай, если в последних
-                  *  трех аргументах записаны не цифры (а также здесь отлавливается какое-то исключение насчет
-                  *  неверной инициализации массива - не хватает элемента): **/
-            // Вначале обнуляем аргументы, которые хранятся в классе Vehicle с прошлого автомобиля:
-            setNullConstructorArguments();
-            //TODO: не забыть сделать метод для отлавливания автомобилей с одинаковыми именами
-            try {
-                setName(oneLineArgs.get(0));
-                setMarker(oneLineArgs.get(1));
-                setAcceleration(Double.valueOf(oneLineArgs.get(2)));
-                setFullSpeed(Double.valueOf(oneLineArgs.get(3)));
-                setMobility(Double.valueOf(oneLineArgs.get(4)));
-            } catch (NumberFormatException e) {
-                System.out.printf("Параметры автомобиля %s объявлены в неверном формате " +
-                        "или какие-то параметры отсутствуют. Автомобиль снят с гонки.\n", oneLineArgs.get(0));
-                printAppendix();
-                k++;
-                continue;
-            }
-
-                /* не забивать аргументы автомобиля, если какой-либо из double параметров равен 0 либо какой-либо из
-                параметров отсутствует: **/
-            if (getAcceleration() <= 0 || getFullSpeed() <= 0 || getMobility() <= 0) {
-                System.out.printf("Неправильная инициализация числовых параметров автомобиля. Автомобиль снят с гонки.\n", oneLineArgs.get(0));
-                printAppendix();
-                k++;
-                continue;
-            }
-            if (getMobility() > 1) {
-                System.out.printf("Недопустимое значение параметра mobility. Автомобиль %s снят с гонки.\n",
-                        oneLineArgs.get(0));
-                printAppendix();
-                k++;
-                continue;
-            }
-            // TODO: выкидывать автомобиль, если такое имя уже есть.
-            switch (getMarker()) {
-                case "Mashka":
-                    userCarsToRace.add(i, new MashkaCar(getName(), getMarker(), getAcceleration(), getFullSpeed(), getMobility()));
-                    break;
-                case "Bmw":
-                    userCarsToRace.add(i, new BmwCar(getName(), getMarker(), getAcceleration(), getFullSpeed(), getMobility()));
-                    break;
-                case "Ferrari":
-                    userCarsToRace.add(i, new FerrariCar(getName(), getMarker(), getAcceleration(), getFullSpeed(), getMobility()));
-                    break;
-                    /* В дефолте сообщение об ошибке маркера класса автомобиля **/
-                default:
-                    System.out.printf("Класс автомобиля %s объявлен неверно. Автомобиль" +
-                            " снят с гонки.\n", oneLineArgs.get(0));
-                    printAppendix();
-                    continueCycle = true;
-                    k++;
-                    break;
-            }
-
-
-            if (!continueCycle) {
-                System.out.printf("Автомобиль %s принят в гонку. \nВведите следующий автомобиль, " +
-                        "либо напечатайте esc и нажмите Enter для перехода на следующий этап.\n", oneLineArgs.get(0));
-                i++;
-                k = 0;
+    // метод, чтобы проверить, не совпадает ли имя нового автомобиля с именем уже занесенного в список:
+    private boolean CarsHaveEqualNames(Vehicle car, ArrayList<Vehicle> userCarsToRace) {
+        String  message = null;
+        for (Vehicle listCar: userCarsToRace) {
+            if (listCar.getName().equals(car.getName())) {
+                message = "Автомобиль с именем " + listCar.getName() + " уже участвует в гонке. Введите другое имя.";
+                breakWithAppendixPrinting(message);
+                return true;
             }
         }
+        return false;
+    }
+
+
+    // Основной метод для считывания данных с консоли и их переработки, возвращает готовый список автомобилей:
+    public ArrayList<Vehicle> readUserData() {
+        ArrayList<Vehicle> userCarsToRace = new ArrayList<>();
+        // TODO: Matcher не группирует адекватно, если: пишу без пробелов, хотя и через запятую (khg  Mashka,45,213,0.5);
+        // пишу с одним пробелом без запятой (нужно хотя бы два)
+        // TODO: здесь нужно еще какую-нибудь RunTime Error, чтобы ожидание ввода не затянулось навечно. .
+        while (CycleIsRunning) {
+            String  message = null;
+            Scanner scanUserInput = new Scanner(System.in);
+            String userInputFromScanner = scanUserInput.nextLine(); // это отсканированная (еще не очищенная) строчка.
+            // ставим условие возвращения цикла в начало или выхода из цикла, если отсканированная строчка нулевая:
+            if (isNullLine(userInputFromScanner)) {
+                continue;
+            }
+            // чистим, группируем символы и загоняем их в список аргументов для конструктора CarModel:
+            ArrayList<String> oneLineArgs = parser(userInputFromScanner);
+
+//            if (isNoValue(oneLineArgs)) {
+//                continue;
+//            }
+            // проверяем, не ввел ли юзер команду "esc":
+            if (isDataInputBreakWithEsc(userCarsToRace, oneLineArgs)) {
+                continue;
+            }
+            // проверяем, нет ли избыточных или недостаточных данных, а также, являются ли три последних параметра
+            // числовыми, а также, соответствует ли второй параметр одному из классов автомобилей:
+            if (inputDataQuantityIsMoreThanNecessary(oneLineArgs) || inputDataQuantityIsLessThanNecessary(oneLineArgs)
+                    || tryToDoubleValidator(oneLineArgs) || isNoSuchClass(oneLineArgs)) {
+                continue;
+            }
+            // создаем экземпляр CarModel:
+            CarModel carModel = carModelCreator(oneLineArgs);
+
+            // проверяем числовые параметры автомобиля:
+            if (carModelValidator(carModel)) {
+                continue;
+            }
+            // создаем экземпляр автомобиля, сравниваем имя автомобиля с именами уже созданных ранее
+            // и загоняем авто в список:
+            Vehicle car = createCar(carModel);
+            if (CarsHaveEqualNames(car, userCarsToRace)) {
+                continue;
+            } else {
+                userCarsToRace.add(car);
+            }
+        message = "Автомобиль " + car.getName() + " принят в гонку. \nВведите следующий автомобиль, " +
+        "либо напечатайте esc и нажмите Enter для перехода на следующий этап.";
+            printMessage(message);
+            errorCount = 0;
+        }
+        return userCarsToRace;
     }
 
     public static void main(String[] args) {

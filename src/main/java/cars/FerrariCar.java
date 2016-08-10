@@ -1,5 +1,7 @@
 package cars;
 
+import entities.CarModel;
+
 /**
  * Created by Ежище on 29.05.2016.
  */
@@ -10,6 +12,7 @@ public class FerrariCar extends Vehicle {
     public FerrariCar(String name, String marker, double acceleration, double fullSpeed, double mobility) {
         super(name, marker, acceleration, fullSpeed, mobility);
     }
+    public FerrariCar (CarModel carModel) { super(carModel);}
 
     //    public FerrariCar(String name, double acceleration, double fullSpeed, double mobility) {
 //        this.name = name;
