@@ -2,6 +2,7 @@ package dataStorageAndProcessing;
 
 import cars.*;
 import entities.CarModel;
+import supportedClasses.DataInputValidator;
 
 import java.util.*;
 import java.util.regex.*;
@@ -26,7 +27,7 @@ public class InitialDataScannerSystemIn {
     private boolean isNullLine(String userInputFromScanner) {
         if (userInputFromScanner.equals("")) {
             String message = null;
-            breakWithAppendixPrinting(message);
+            DataInputValidator.breakWithAppendixPrinting(message);
             return true;
         }
         return false;
@@ -64,22 +65,22 @@ public class InitialDataScannerSystemIn {
     // метод для отслеживания количества неправильных попыток юзера и предупреждения об окончании ввода
     // данных - вспомогательный метод для isNullLine и для всех последующих методов проверки на ошибки,
     // но не для isDataInputBreakWithEsc:
-    private void breakWithAppendixPrinting(String message) {
-        printMessage(message); // это конкретное описание ошибки - message из метода, который вызвал этот метод для
-        // завершения цикла
-        if (errorCount <= 1) {
-            message = "Введите параметры автомобиля либо напечатайте esc и нажмите Enter " +
-                    "для перехода на следующий этап.";
-            errorCount++;
-        } else if (errorCount == 3) {
-            message = "Ввод данных прерван. Пожалуйста, запустите программу снова.";
-            CycleIsRunning = false;
-        } else  {
-            message = "После следующей неправильной попытки ввода программа будет завершена.";
-            errorCount++;
-        }
-        printMessage(message);
-    }
+//    private void breakWithAppendixPrinting(String message) {
+//        printMessage(message); // это конкретное описание ошибки - message из метода, который вызвал этот метод для
+//        // завершения цикла
+//        if (errorCount <= 1) {
+//            message = MessageStore.ERR_COUNT_FIRST_LEVEL_MSG; // выкидывает сообщение "Введите параметры автомобиля
+//            // либо напечатайте esc и нажмите Enter для перехода на следующий этап."
+//            errorCount++;
+//        } else if (errorCount == 3) {
+//            message = "Ввод данных прерван. Пожалуйста, запустите программу снова.";
+//            CycleIsRunning = false;
+//        } else  {
+//            message = "После следующей неправильной попытки ввода программа будет завершена.";
+//            errorCount++;
+//        }
+//        printMessage(message);
+//    }
 
 //    private boolean isNoValue(ArrayList<String> oneLineArgs) {
 //        if (oneLineArgs.size() == 0) {
@@ -113,7 +114,7 @@ public class InitialDataScannerSystemIn {
         if (oneLineArgs.size() > 5) {
             message = "Параметры автомобиля " + oneLineArgs.get(0) + " объявлены неверно: найден " +
                     "избыточный параметр. Автомобиль снят с гонки.";
-            breakWithAppendixPrinting(message);
+            DataInputValidator.breakWithAppendixPrinting(message);
             return true;
         }
         return false;
@@ -125,7 +126,7 @@ public class InitialDataScannerSystemIn {
         if (oneLineArgs.size() < 5) {
             message = "Параметры автомобиля " + oneLineArgs.get(0) + " объявлены неверно: не все параметры " +
                     "введены. Автомобиль снят с гонки.";
-            breakWithAppendixPrinting(message);
+            DataInputValidator.breakWithAppendixPrinting(message);
             return true;
         }
         return false;
@@ -142,7 +143,7 @@ public class InitialDataScannerSystemIn {
         catch (NumberFormatException e) {
             message = "Числовые параметры автомобиля " + oneLineArgs.get(2) + " объявлены в неверном формате. " +
                     "Автомобиль снят с гонки.";
-            breakWithAppendixPrinting(message);
+            DataInputValidator.breakWithAppendixPrinting(message);
             return true;
         }
         return false;
@@ -158,7 +159,7 @@ public class InitialDataScannerSystemIn {
                 return false;
             default:
                 message = "Неправильно указан класс автомобиля " + oneLineArgs.get(0) + ".";
-                breakWithAppendixPrinting(message);
+                DataInputValidator.breakWithAppendixPrinting(message);
                 return true;
         }
 //        if (!oneLineArgs.get(1).equals("Mashka") || !oneLineArgs.get(1).equals("BMW") ||
@@ -188,13 +189,13 @@ public class InitialDataScannerSystemIn {
         if (carModel.acceleration <= 0 || carModel.fullSpeed <= 0) {
             message = "Неправильное значение параметров ускорения или максимальной скорости автомобиля "
                     + carModel.name + ": \nпараметры должны быть больше нуля. Автомобиль снят с гонки.";
-            breakWithAppendixPrinting(message);
+            DataInputValidator.breakWithAppendixPrinting(message);
             return true;
         }
         else if (carModel.mobility > 1 || carModel.mobility <= 0) {
             message = "Недопустимое значение параметра мобильность автомобиля " + carModel.name + ": \nмобильность " +
                     "указывается в пределах больше нуля до 1 включительно. Автомобиль снят с гонки.";
-            breakWithAppendixPrinting(message);
+            DataInputValidator.breakWithAppendixPrinting(message);
             return true;
         }
         return false;
@@ -218,7 +219,7 @@ public class InitialDataScannerSystemIn {
                     /* В дефолте сообщение о неопознанной ошибке **/
             default:
                 message = "Автомобиль не обнаружен. Неопознанная ошибка.";
-                breakWithAppendixPrinting(message);
+                DataInputValidator.breakWithAppendixPrinting(message);
                 break;
         }
         return car;
@@ -230,7 +231,7 @@ public class InitialDataScannerSystemIn {
         for (Vehicle listCar: userCarsToRace) {
             if (listCar.getName().equals(car.getName())) {
                 message = "Автомобиль с именем " + listCar.getName() + " уже участвует в гонке. Введите другое имя.";
-                breakWithAppendixPrinting(message);
+                DataInputValidator.breakWithAppendixPrinting(message);
                 return true;
             }
         }
