@@ -2,6 +2,8 @@ package supportedClasses;
 
 import dataStorageAndProcessing.MessageStore;
 
+import static dataStorageAndProcessing.MessageStore.ERR_COUNT_FIRST_LEVEL_MSG;
+
 /**
  * Created by Ежище on 10.08.2016.
  */
@@ -15,11 +17,12 @@ public final class DataInputValidator {
             System.out.println(message);
     }
 
+
     public static void breakWithAppendixPrinting(String message) {
         printMessage(message); // это конкретное описание ошибки - message из метода, который вызвал этот метод для
         // завершения цикла
         if (errorCount <= 1) {
-            message = MessageStore.ERR_COUNT_FIRST_LEVEL_MSG; // выкидывает сообщение "Введите параметры автомобиля
+            message = ERR_COUNT_FIRST_LEVEL_MSG.getMessage(); // выкидывает сообщение "Введите параметры автомобиля
             // либо напечатайте esc и нажмите Enter для перехода на следующий этап."
             errorCount++;
         } else if (errorCount == 3) {
