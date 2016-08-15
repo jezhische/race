@@ -3,11 +3,9 @@ package dataStorageAndProcessing;
 import cars.*;
 import entities.CarModel;
 import supportedClasses.DataInputValidator;
+import supportedClasses.ErrCountCauseException;
 
 import java.util.*;
-import java.util.regex.*;
-
-import static supportedClasses.DataInputValidator.*;
 
 
 /**
@@ -15,7 +13,7 @@ import static supportedClasses.DataInputValidator.*;
  * * Класс для составления списка автомобилей, параметры которых юзер забивает вручную с клавиатуры. Основной метод
  * класса readUserData() возвращает ArrayList с автомобилями в нем.
  */
-public class InitialDataScannerSystemIn  {
+public class InitialDataScannerSystemIn {
 
 
     // Основной метод для считывания данных с консоли и их переработки, возвращает готовый список автомобилей:
@@ -27,48 +25,57 @@ public class InitialDataScannerSystemIn  {
         DataInputValidator validator = new DataInputValidator();
         boolean cycleIsRunning = true;
         while (cycleIsRunning) {
-            cycleIsRunning = validator.getCycleIsRunning();
-            String  message = null;
-            Scanner scanUserInput = new Scanner(System.in);
-            String userInputFromScanner = scanUserInput.nextLine(); // это отсканированная (еще не очищенная) строчка.
-            // ставим условие возвращения цикла в начало или выхода из цикла, если отсканированная строчка нулевая:
-            if (validator.isNullLine(userInputFromScanner)) {
-                continue;
-            }
-            // чистим, группируем символы и загоняем их в список аргументов для конструктора CarModel:
-            ArrayList<String> oneLineArgs = validator.parser(userInputFromScanner);
+            try { // см. catch внизу - способ выхода из цикла через пробрасывание исключения
+                String message = null;
+                Scanner scanUserInput = new Scanner(System.in);
+                String userInputFromScanner = scanUserInput.nextLine(); // это отсканированная (еще не очищенная) строчка.
 
-            // проверяем, не ввел ли юзер команду "esc":
-            if (validator.isDataInputBreakWithEsc(userCarsToRace, oneLineArgs)) {
-                continue;
-            }
-            // проверяем, нет ли избыточных или недостаточных данных, а также, являются ли три последних параметра
-            // числовыми, а также, соответствует ли второй параметр одному из классов автомобилей:
-            if (validator.inputDataQuantityIsMoreThanNecessary(oneLineArgs) || validator.inputDataQuantityIsLessThanNecessary(oneLineArgs)
-                    || validator.tryToDoubleValidator(oneLineArgs) || validator.isNoSuchClass(oneLineArgs)) {
-                continue;
-            }
-            // создаем экземпляр CarModel:
-            CarModel carModel = validator.carModelCreator(oneLineArgs);
+                // ставим условие возвращения цикла в начало или выхода из цикла, если отсканированная строчка нулевая:
+                if (validator.isEmptyLine(userInputFromScanner)) {
+                    continue;
+                }
+                // чистим, группируем символы и загоняем их в список аргументов для конструктора CarModel:
+                ArrayList<String> oneLineArgs = validator.parser(userInputFromScanner);
 
-            // проверяем числовые параметры автомобиля:
-            if (validator.carModelValidator(carModel)) {
-                continue;
-            }
-            // создаем экземпляр автомобиля, сравниваем имя автомобиля с именами уже созданных ранее
-            // и загоняем авто в список:
-            Vehicle car = validator.createCar(carModel);
-            if (validator.CarsHaveEqualNames(car, userCarsToRace)) {
-                continue;
-            } else {
-                userCarsToRace.add(car);
-            }
+                // проверяем, не забиты ли символы вместо букв, если да, то вызываем метод isNullLine(),
+                // поскольку в следующем методе идет обращение к oneLineArgs.get(0), и будет IndexOutOfBoundsException:
+                if (validator.isNullLine(oneLineArgs)) {
+                    continue;
+                }
+                // проверяем, не ввел ли юзер команду "esc":
+                if (validator.isDataInputBreakWithEsc(userCarsToRace, oneLineArgs)) {
+                    continue;
+                }
+                // проверяем, нет ли избыточных или недостаточных данных,
+                // а также, являются ли три последних параметра числовыми, а также, соответствует ли второй параметр
+                // одному из классов автомобилей:
+                if (validator.inputDataQuantityIsRedundant(oneLineArgs)
+                        || validator.inputDataQuantityIsInsufficient(oneLineArgs)
+                        || validator.tryToDoubleValidator(oneLineArgs) || validator.isNoSuchClass(oneLineArgs)) {
+                    continue;
+                }
+                // создаем экземпляр CarModel:
+                CarModel carModel = validator.carModelCreator(oneLineArgs);
 
-            validator.addCarAndContinueCarCreating(car);
-//        message = "Автомобиль " + car.getName() + " принят в гонку. \nВведите следующий автомобиль, " +
-//        "либо напечатайте esc и нажмите Enter для перехода на следующий этап.";
-//            printMessage(message);
-//            errorCount = 0;
+                // проверяем числовые параметры автомобиля:
+                if (validator.carModelValidator(carModel)) {
+                    continue;
+                }
+                // создаем экземпляр автомобиля, сравниваем имя автомобиля с именами уже созданных ранее
+                // и загоняем авто в список:
+                Vehicle car = validator.createCar(carModel);
+                if (validator.CarsHaveEqualNames(car, userCarsToRace)) {
+                    continue;
+                } else {
+                    userCarsToRace.add(car);
+                }
+
+                // сообщаем об успешном добавлении автомобиля и обнуляем счетчик:
+                validator.resetErrCountAndContinueCarCreating(car);
+
+            } catch (ErrCountCauseException e) {
+                cycleIsRunning = false; // continue здесь не нужно (избыточно), поскольку цикл и так начинается сначала
+            }
         }
         return userCarsToRace;
     }
@@ -76,10 +83,10 @@ public class InitialDataScannerSystemIn  {
     public static void main(String[] args) {
         InitialDataScannerSystemIn ini = new InitialDataScannerSystemIn();
 //        DataInputValidator validator = new DataInputValidator();
-//        validator.isNullLine("");
-//        validator.isNullLine("");
-//        validator.isNullLine("");
-//        validator.isNullLine("");
+//        validator.isEmptyLine("");
+//        validator.isEmptyLine("");
+//        validator.isEmptyLine("");
+//        validator.isEmptyLine("");
         ini.readUserData();
 //        System.out.println(ini.userCarsToRace.get(0).getName());
 //        System.out.println(ini.userCarsToRace.get(0).getMobility());
