@@ -39,6 +39,12 @@ public class TestDataInputValidator {
     @After
     public void tearDown() {
         validator = null;
+        try {
+            sysOut.redirectOut().close();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         sysOut = null;
         outputMsg = null;
         msg = null;
