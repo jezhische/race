@@ -44,7 +44,8 @@ public class InitialDataScannerSystemIn  {
             }
             // проверяем, нет ли избыточных или недостаточных данных, а также, являются ли три последних параметра
             // числовыми, а также, соответствует ли второй параметр одному из классов автомобилей:
-            if (validator.inputDataQuantityIsMoreThanNecessary(oneLineArgs) || validator.inputDataQuantityIsLessThanNecessary(oneLineArgs)
+            if (validator.inputDataQuantityIsMoreThanNecessary(oneLineArgs)
+                    || validator.inputDataQuantityIsLessThanNecessary(oneLineArgs)
                     || validator.tryToDoubleValidator(oneLineArgs) || validator.isNoSuchClass(oneLineArgs)) {
                 continue;
             }
