@@ -1,10 +1,15 @@
 package JUnitTests;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import supportedClasses.DataInputValidator;
 import supportedClasses.ErrCountCauseException;
-import testSupport.ConsoleReader;
-import testSupport.SystemOutReader;
+import testSupport.FileToString;
+import testSupport.OutToFileRedirect;
+
+import java.io.File;
+import java.io.IOException;
 
 import static dataStorageAndProcessing.MessageStore.ERR_COUNT_FIRST_LEVEL_MSG;
 import static org.junit.Assert.assertTrue;
@@ -13,32 +18,49 @@ import static org.junit.Assert.assertTrue;
  * Created by Ежище on 14.08.2016.
  */
 public class TestDataInputValidator {
+//    DataInputValidator validator = new DataInputValidator();
+//    FileToString outputMsg = new FileToString();
+//    String msg = "some message";
+
     private DataInputValidator validator;
-    private SystemOutReader outData;
-    private ConsoleReader console;
+    private OutToFileRedirect sysOut;
+    private FileToString outputMsg;
     private String msg;
 
 
     @Before
     public void setupBefore() {
         validator = new DataInputValidator();
-        outData = new SystemOutReader();
-        console = new ConsoleReader();
+        sysOut = new OutToFileRedirect();
+        outputMsg = new FileToString();
         msg = "some message";
     }
 
     @After
     public void tearDown() {
         validator = null;
-        outData = null;
-        console = null;
+        sysOut = null;
+        outputMsg = null;
         msg = null;
     }
 
     @Test
-    public void testBreakWithAppendixPrintingFirstErr() throws ErrCountCauseException {
+
+    public void testBreakWithAppendixPrintingFirstErr() throws ErrCountCauseException, IOException {
+        sysOut.redirectOut();
         validator.breakWithAppendixPrinting(msg);
-//        outData.readSystemOut();
-        assertTrue(console.readConsole().equals(msg + "\n" + ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+
+//        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
+//                .equals(msg + "\n" + ERR_COUNT_FIRST_LEVEL_MSG.getMessage() + "\n"));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
+                .contains(msg));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
+                .contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
     }
+
+//    public static void main(String[] args) {
+//        TestDataInputValidator test = new TestDataInputValidator();
+//        System.out.println(test.outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")));
+//        System.out.println(test.msg + "\n" + ERR_COUNT_FIRST_LEVEL_MSG.getMessage());
+//    }
 }
