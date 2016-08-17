@@ -1,6 +1,8 @@
 package cars;
 
 
+import entities.CarModel;
+
 /**
  * Created by Ежище on 04.05.2016.
  */
@@ -8,7 +10,7 @@ public class Vehicle {
     /**
      * the length of each straight segment, m:
      */
-    final static int spacing = 2000;
+    final static int SPACING = 2000;
     /* name of the car **/
     private String name;
     /* marker to get typr of the car if it's necessary **/
@@ -47,6 +49,14 @@ public class Vehicle {
     private boolean checkParameters = false;
 
     public Vehicle(){};
+
+    public Vehicle (CarModel carModel) {
+        setName(carModel.name);
+        setMarker(carModel.marker);
+        setAcceleration(carModel.acceleration);
+        setFullSpeed(carModel.fullSpeed);
+        setMobility(carModel.mobility);
+    }
 
     public Vehicle(String name, String marker, double acceleration, double fullSpeed, double mobility) {
         setName(name);
@@ -183,10 +193,10 @@ public class Vehicle {
         double spacingX;// m
 
         // вычисляем время прохождения прямого участка пути по физической формуле: s = a*t^2/2+v0*t;
-        // в терминах задачи это: acceleration * timeFull^2 / 2 + initialSpeed * timeFull - spacing = 0;
+        // в терминах задачи это: acceleration * timeFull^2 / 2 + initialSpeed * timeFull - SPACING = 0;
 
         /** double Discriminant = discriminant of the quadratic equation;*/
-        double Discriminant = Math.pow(initialSpeed, 2) - 4 * (acceleration / 2) * (-spacing);
+        double Discriminant = Math.pow(initialSpeed, 2) - 4 * (acceleration / 2) * (-SPACING);
         timeFull = (-initialSpeed + Math.pow(Discriminant, 0.5)) / acceleration;//(это формула положительного
         // корня кв.уравн.)
         /** Расчет скорости greatestPossibleSpeed и условие для fullSpeed: */
@@ -199,7 +209,7 @@ public class Vehicle {
             //из формулы spacingX = initialSpeed*tX+acceleration*tX^2/2:
             spacingX = initialSpeed * (fullSpeed / 3.6 - initialSpeed) / acceleration
                     + Math.pow((fullSpeed / 3.6 - initialSpeed), 2) / (2 * acceleration);
-            directSegmentTime = (fullSpeed / 3.6 - initialSpeed) / acceleration + (spacing - spacingX) / (fullSpeed / 3.6);
+            directSegmentTime = (fullSpeed / 3.6 - initialSpeed) / acceleration + (SPACING - spacingX) / (fullSpeed / 3.6);
             terminalSpeed = fullSpeed / 3.6;//Note: vTerminal = m/sec and fullSpeed = km/h.
         }
         return this;
