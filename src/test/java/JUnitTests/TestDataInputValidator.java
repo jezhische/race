@@ -39,29 +39,33 @@ public class TestDataInputValidator {
     @After
     public void tearDown() {
         validator = null;
-        try {
-            sysOut.redirectOut().close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            sysOut.redirectOut().close();
+//        }
+//        catch(Exception e) {
+//            e.printStackTrace();
+//        }
         sysOut = null;
         outputMsg = null;
         msg = null;
     }
+//    @AfterClass
+//    public static void logout() {
+//        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+//    }
 
     @Test
 
     public void testBreakWithAppendixPrintingFirstErr() throws ErrCountCauseException, IOException {
         sysOut.redirectOut();
         validator.breakWithAppendixPrinting(msg);
-
+        validator.breakWithAppendixPrinting(msg);
+        validator.breakWithAppendixPrinting(msg);
+String message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
 //        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
 //                .equals(msg + "\n" + ERR_COUNT_FIRST_LEVEL_MSG.getMessage() + "\n"));
-        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
-                .contains(msg));
-        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
-                .contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+        assertTrue(message.contains(msg));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
     }
 
 //    public static void main(String[] args) {

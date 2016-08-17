@@ -3,8 +3,11 @@ package JUnitTests;
 import dataStorageAndProcessing.InitialDataScannerSystemIn;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import testSupport.SystemInSubstitution;
 import testSupport.SystemOutReader;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Ежище on 14.08.2016.
@@ -29,21 +32,21 @@ public class TestInitialDataScannerSystemIn {
     }
 
 //    // проверяем, что при нулевом вводе метод возвращает пустой список:
-//    @Test
-//    public void testReadUserDataReturnForEmptyDataIn() {
-////        inSubst.createSystemIn("");
-////        inSubst.createSystemIn("");
-//       try {
-//           inSubst.createSystemIn("hththtrtrhetreh");
-////           outData.readSystemOut();
-////        assertFalse(cars.readUserData() == null);
-//           assertTrue(outData.readSystemOut().equals("Параметры автомобиля jkjhkjh объявлены неверно: не все параметры " +
-//                   "введены. Автомобиль снят с гонки.\n" +
-//                   "Введите параметры автомобиля либо напечатайте esc и нажмите Enter для перехода на следующий этап."));
-//       }
-//       catch (Exception e) {
-//           System.out.println(e.getMessage());
-//       }
-//    }
+    @Test
+    public void testReadUserDataReturnForEmptyDataIn() {
+//        inSubst.createSystemIn("");
+//        inSubst.createSystemIn("");
+       try {
+           inSubst.createSystemIn("hththtrtrhetreh");
+//           outData.readSystemOut();
+//        assertFalse(cars.readUserData() == null);
+           assertTrue(outData.readSystemOut().equals("Параметры автомобиля jkjhkjh объявлены неверно: не все параметры " +
+                   "введены. Автомобиль снят с гонки.\n" +
+                   "Введите параметры автомобиля либо напечатайте esc и нажмите Enter для перехода на следующий этап."));
+       }
+       catch (Exception e) {
+           System.out.println(e.getMessage());
+       }
+    }
 
 }

@@ -1,6 +1,7 @@
 package testSupport;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 /**
@@ -9,7 +10,7 @@ import java.io.PrintStream;
 public class OutToFileRedirect {
     public PrintStream redirectOut() {
         try  {
-            PrintStream output = new PrintStream("src\\main\\resources\\testSupport\\output.txt");
+            PrintStream output = new PrintStream(new FileOutputStream("src\\main\\resources\\testSupport\\output.txt"));
             System.setOut(output);
             return System.out;
         } catch (FileNotFoundException e) {
