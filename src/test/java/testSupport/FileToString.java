@@ -20,9 +20,9 @@ public class FileToString {
         }
 
     }
-//
-//    public static void main(String[] args) {
-//        FileToString fs = new FileToString();
-//        System.out.println(fs.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")));
-//    }
+
+    public static void main(String[] args) {
+        FileToString fs = new FileToString();
+        System.out.println(fs.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")));
+    }
 }

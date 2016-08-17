@@ -1,6 +1,7 @@
 package JUnitTests;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import supportedClasses.DataInputValidator;
@@ -8,8 +9,7 @@ import supportedClasses.ErrCountCauseException;
 import testSupport.FileToString;
 import testSupport.OutToFileRedirect;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import static dataStorageAndProcessing.MessageStore.ERR_COUNT_FIRST_LEVEL_MSG;
 import static org.junit.Assert.assertTrue;
@@ -39,34 +39,26 @@ public class TestDataInputValidator {
     @After
     public void tearDown() {
         validator = null;
-        try {
-            sysOut.redirectOut().close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        sysOut = null;
+        sysOut.redirectOut().close();
+//        sysOut = null;
         outputMsg = null;
         msg = null;
     }
+    @AfterClass
+    public static void logout() {
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+    }
 
     @Test
-
     public void testBreakWithAppendixPrintingFirstErr() throws ErrCountCauseException, IOException {
         sysOut.redirectOut();
         validator.breakWithAppendixPrinting(msg);
-
+        //TODO: почему не срабатывает полное равенство?:
+        String message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
 //        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
 //                .equals(msg + "\n" + ERR_COUNT_FIRST_LEVEL_MSG.getMessage() + "\n"));
-        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
-                .contains(msg));
-        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"))
-                .contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+        assertTrue(message.contains(msg));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
     }
 
-//    public static void main(String[] args) {
-//        TestDataInputValidator test = new TestDataInputValidator();
-//        System.out.println(test.outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")));
-//        System.out.println(test.msg + "\n" + ERR_COUNT_FIRST_LEVEL_MSG.getMessage());
-//    }
 }
