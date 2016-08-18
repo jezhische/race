@@ -56,20 +56,6 @@ public final class DataInputValidator {
         return false;
     }
 
-    // parser анализирует строчку, забитую юзером в консоли, разбивает на отдельные стринги и заносит в лист для
-    // последующего создания модели автомобиля, из которой затем будет создан автомобиль
-    public ArrayList<String> parser(String arg) {
-        Pattern userGroupsPattern = Pattern.compile("(-)?\\w+(.\\w+)?"); // regex для очистки аргументов, заносимых
-        // в конструктор new Vehicle, от пробелов, запятых и возможной иной шелухи.
-        Matcher userGroupsMatcher = userGroupsPattern.matcher(arg);
-        ArrayList<String> oneLineArgs = new ArrayList<>(); // сюда заносятся очищенные аргументы на 1 автомобиль.
-        // Это не массив, так что исключений при превышении емкости не будет, так что программа не будет выдавать ошибки.
-        while (userGroupsMatcher.find()) {
-            oneLineArgs.add(userGroupsMatcher.group());
-        }
-        return oneLineArgs;
-    }
-
     // метод для проверки, содержит ли созданный список ненулевые элементы (null возможен, если были забиты не-числовые
     // или не-буквенные символы)
     public boolean isNullLine(ArrayList<String> oneLineArgs) throws ErrCountCauseException {
@@ -79,17 +65,6 @@ public final class DataInputValidator {
             return true;
         }
         return false;
-    }
-
-    // метод для создания модели автомобиля на основе аргументов, очищенных парсером и забитых в лист oneLineArgs
-    public CarModel carModelCreator(List<String> oneLineArgs) {
-        CarModel carModel = new CarModel();
-        carModel.name = oneLineArgs.get(0);
-        carModel.marker = oneLineArgs.get(1);
-        carModel.acceleration = Double.valueOf(oneLineArgs.get(2));
-        carModel.fullSpeed = Double.valueOf(oneLineArgs.get(3));
-        carModel.mobility = Double.valueOf(oneLineArgs.get(4));
-        return carModel;
     }
 
     // метод для того, чтобы юзер мог закончить ввод данных и выйти из метода readUserData(); значение по дефолту false:
@@ -187,30 +162,6 @@ public final class DataInputValidator {
             return true;
         }
         return false;
-    }
-
-    // метод для создания объекта Vehicle нужного типа (Mashka, BMW или Ferrari). Поскольку к сеттерам обращается CarModel,
-    // то все возможные ошибки должны были быть проброшены раньше, еще на этапе создания модели:
-    public Vehicle createCar(CarModel carModel) throws ErrCountCauseException {
-        Vehicle car = new Vehicle();
-        String message = null;
-        switch (carModel.marker) {
-            case "Mashka":
-                car = new MashkaCar(carModel);
-                break;
-            case "BMW":
-                car = new BmwCar(carModel);
-                break;
-            case "Ferrari":
-                car = new FerrariCar(carModel);
-                break;
-                    /* В дефолте сообщение о неопознанной ошибке **/
-            default:
-                message = UNINDENTIFIED_ERR_MSG.getMessage(); // сообщение: "Автомобиль не обнаружен. Неопознанная ошибка."
-                breakWithAppendixPrinting(message);
-                break;
-        }
-        return car;
     }
 
     // метод, чтобы проверить, не совпадает ли имя нового автомобиля с именем уже занесенного в список:

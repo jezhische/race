@@ -6,6 +6,7 @@ import java.io.PrintStream;
 
 /**
  * Created by Ежище on 16.08.2016.
+ * Один метод, который перенаправляет поток System.out в файл
  */
 public class OutToFileRedirect {
     public PrintStream redirectOut() {

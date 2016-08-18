@@ -12,7 +12,7 @@ public class FileToString {
 
         try(FileReader getStringFromFile = new FileReader(file)) {
             char[] buffer = new char[(int)file.length()];
-            getStringFromFile.read(buffer);
+            getStringFromFile.read(buffer); // здесь считываем все содержимое файла в виде char[]
             return new String(buffer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -20,9 +20,9 @@ public class FileToString {
         }
 
     }
-
-    public static void main(String[] args) {
-        FileToString fs = new FileToString();
-        System.out.println(fs.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")));
-    }
+//
+//    public static void main(String[] args) {
+//        FileToString fs = new FileToString();
+//        System.out.println(fs.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")));
+//    }
 }

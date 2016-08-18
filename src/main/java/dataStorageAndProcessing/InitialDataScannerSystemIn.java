@@ -6,6 +6,10 @@ import supportedClasses.DataInputValidator;
 import supportedClasses.ErrCountCauseException;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static dataStorageAndProcessing.MessageStore.UNINDENTIFIED_ERR_MSG;
 
 
 /**
@@ -14,6 +18,57 @@ import java.util.*;
  * класса readUserData() возвращает ArrayList с автомобилями в нем.
  */
 public class InitialDataScannerSystemIn {
+
+
+    // parser анализирует строчку, забитую юзером в консоли, разбивает на отдельные стринги и заносит в лист для
+    // последующего создания модели автомобиля, из которой затем будет создан автомобиль
+    public ArrayList<String> parser(String arg) {
+        Pattern userGroupsPattern = Pattern.compile("(-)?\\w+(.\\w+)?"); // regex для очистки аргументов, заносимых
+        // в конструктор new Vehicle, от пробелов, запятых и возможной иной шелухи.
+        Matcher userGroupsMatcher = userGroupsPattern.matcher(arg);
+        ArrayList<String> oneLineArgs = new ArrayList<>(); // сюда заносятся очищенные аргументы на 1 автомобиль.
+        // Это не массив, так что исключений при превышении емкости не будет, так что программа не будет выдавать ошибки.
+        while (userGroupsMatcher.find()) {
+            oneLineArgs.add(userGroupsMatcher.group());
+        }
+        return oneLineArgs;
+    }
+
+    // метод для создания модели автомобиля на основе аргументов, очищенных парсером и забитых в лист oneLineArgs
+    public CarModel carModelCreator(List<String> oneLineArgs) {
+        CarModel carModel = new CarModel();
+        carModel.name = oneLineArgs.get(0);
+        carModel.marker = oneLineArgs.get(1);
+        carModel.acceleration = Double.valueOf(oneLineArgs.get(2));
+        carModel.fullSpeed = Double.valueOf(oneLineArgs.get(3));
+        carModel.mobility = Double.valueOf(oneLineArgs.get(4));
+        return carModel;
+    }
+
+    // метод для создания объекта Vehicle нужного типа (Mashka, BMW или Ferrari). Поскольку к сеттерам обращается CarModel,
+    // то все возможные ошибки должны были быть проброшены раньше, еще на этапе создания модели:
+    public Vehicle createCar(CarModel carModel, DataInputValidator validator) throws ErrCountCauseException {
+        Vehicle car = new Vehicle();
+        String message = null;
+        switch (carModel.marker) {
+            case "Mashka":
+                car = new MashkaCar(carModel);
+                break;
+            case "BMW":
+                car = new BmwCar(carModel);
+                break;
+            case "Ferrari":
+                car = new FerrariCar(carModel);
+                break;
+                    /* В дефолте сообщение о неопознанной ошибке **/
+            default:
+                message = UNINDENTIFIED_ERR_MSG.getMessage(); // сообщение: "Автомобиль не обнаружен. Неопознанная ошибка."
+
+                validator.breakWithAppendixPrinting(message);
+                break;
+        }
+        return car;
+    }
 
 
     // Основной метод для считывания данных с консоли и их переработки, возвращает готовый список автомобилей:
@@ -35,7 +90,7 @@ public class InitialDataScannerSystemIn {
                     continue;
                 }
                 // чистим, группируем символы и загоняем их в список аргументов для конструктора CarModel:
-                ArrayList<String> oneLineArgs = validator.parser(userInputFromScanner);
+                ArrayList<String> oneLineArgs = parser(userInputFromScanner);
 
                 // проверяем, не забиты ли символы вместо букв, если да, то вызываем метод isNullLine(),
                 // поскольку в следующем методе идет обращение к oneLineArgs.get(0), и будет IndexOutOfBoundsException:
@@ -55,7 +110,7 @@ public class InitialDataScannerSystemIn {
                     continue;
                 }
                 // создаем экземпляр CarModel:
-                CarModel carModel = validator.carModelCreator(oneLineArgs);
+                CarModel carModel = carModelCreator(oneLineArgs);
 
                 // проверяем числовые параметры автомобиля:
                 if (validator.carModelValidator(carModel)) {
@@ -63,7 +118,7 @@ public class InitialDataScannerSystemIn {
                 }
                 // создаем экземпляр автомобиля, сравниваем имя автомобиля с именами уже созданных ранее
                 // и загоняем авто в список:
-                Vehicle car = validator.createCar(carModel);
+                Vehicle car = createCar(carModel, validator);
                 if (validator.CarsHaveEqualNames(car, userCarsToRace)) {
                     continue;
                 } else {
