@@ -1,4 +1,4 @@
-package testSupport;
+package testSupport.forScannerSystemIn;
 
 import java.io.*;
 

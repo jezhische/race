@@ -4,8 +4,8 @@ import dataStorageAndProcessing.InitialDataScannerSystemIn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import testSupport.SystemInSubstitution;
-import testSupport.SystemOutReader;
+import testSupport.forScannerSystemIn.SystemInSubstitution;
+import testSupport.forScannerSystemIn.SystemOutReader;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,7 +36,9 @@ public class TestInitialDataScannerSystemIn {
     public void testReadUserDataReturnForEmptyDataIn() {
 //        inSubst.createSystemIn("");
 //        inSubst.createSystemIn("");
-       try {
+       try { // TODO: здесь пробрасывается исключение, поскольку после первого прохода цикла, где сканнер получает
+           // пустышку, во второй раз он ничего не находит и выбрасывает исключение. Так что тест будет верен, что бы
+           // я ни написал
            inSubst.createSystemIn("hththtrtrhetreh");
 //           outData.readSystemOut();
 //        assertFalse(cars.readUserData() == null);

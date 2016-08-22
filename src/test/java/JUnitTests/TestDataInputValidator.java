@@ -4,7 +4,8 @@ import cars.MashkaCar;
 import cars.Vehicle;
 import org.junit.*;
 import supportedClasses.*;
-import testSupport.*;
+import testSupport.forSystemOutRedirect.FileToString;
+import testSupport.forSystemOutRedirect.OutToFileRedirect;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class TestDataInputValidator {
     private String msg;
     private ArrayList<String> oneLineArgs;
     private ArrayList<Vehicle> userCarsToRace;
-    private Vehicle mashka;
+    private Vehicle rightCarMashka;
 //    private String userInputFromScanner;
 
 
@@ -36,7 +37,7 @@ public class TestDataInputValidator {
         msg = "some message";
         oneLineArgs = new ArrayList<>(0);
         userCarsToRace = new ArrayList<>();
-        mashka = new MashkaCar("mashka", "Mashka", 123, 456, 0.98 );
+        rightCarMashka = new MashkaCar("mashka", "Mashka", 123, 456, 0.98);
     }
 
     @After
@@ -48,7 +49,7 @@ public class TestDataInputValidator {
         msg = null;
         oneLineArgs = null;
         userCarsToRace = null;
-        mashka = null;
+        rightCarMashka = null;
     }
 
     @AfterClass
@@ -67,6 +68,7 @@ public class TestDataInputValidator {
         assertTrue(message.contains(msg));
         assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
     }
+
     @Test
     public void testBreakWithAppendixPrinting_SecondErr() throws ErrCountCauseException {
         sysOut.redirectOut();
@@ -77,6 +79,7 @@ public class TestDataInputValidator {
         assertTrue(message.contains(msg));
         assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
     }
+
     @Test
     public void testBreakWithAppendixPrinting_PenultErr() throws ErrCountCauseException {
         sysOut.redirectOut();
@@ -89,6 +92,7 @@ public class TestDataInputValidator {
         assertTrue(message.contains(msg));
         assertTrue(message.contains(ERR_COUNT_PENULT_LEVEL_MSG.getMessage()));
     }
+
     @Test(expected = ErrCountCauseException.class)
     public void testBreakWithAppendixPrinting_LastErr() throws ErrCountCauseException {
         sysOut.redirectOut();
@@ -104,6 +108,7 @@ public class TestDataInputValidator {
         assertTrue(message.contains(msg));
         assertTrue(message.contains(ERR_COUNT_LAST_LEVEL_MSG.getMessage()));
     }
+
     @Test
     public void testIsEmptyLine() throws ErrCountCauseException {
         sysOut.redirectOut();
@@ -114,6 +119,7 @@ public class TestDataInputValidator {
         assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
                 contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
     }
+
     @Test
     public void testIsNullLine() throws ErrCountCauseException {
         // method condition (if) is fulfilled:
@@ -129,6 +135,7 @@ public class TestDataInputValidator {
         assertFalse(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
                 contains(INCORRECT_DATA_INPUT_FORMAT.getMessage()));
     }
+
     @Test
     public void testIsDataInputBreakWithEsc() throws ErrCountCauseException {
         // method condition (else if) is fulfilled:
@@ -137,23 +144,25 @@ public class TestDataInputValidator {
         assertTrue(validator.isDataInputBreakWithEsc(userCarsToRace, oneLineArgs));
         assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
                 contains(NAME_IS_RESERVED.getMessage()));
-                //else is fulfilled:
+        //else is fulfilled:
         sysOut.redirectOut();
-        oneLineArgs.set(0,"something");
+        oneLineArgs.set(0, "something");
         assertFalse(validator.isDataInputBreakWithEsc(userCarsToRace, oneLineArgs));
     }
-    @Test (expected = ErrCountCauseException.class)
+
+    @Test(expected = ErrCountCauseException.class)
     public void testIsDataInputBreakWithEsc_WithNotEmptyUserCarsToRace() throws ErrCountCauseException {
-         // method condition (if) is fulfilled:
+        // method condition (if) is fulfilled:
         oneLineArgs.add(0, "esc");
-        userCarsToRace.add(mashka);
+        userCarsToRace.add(rightCarMashka);
         sysOut.redirectOut();
         validator.isDataInputBreakWithEsc(userCarsToRace, oneLineArgs);
         // TODO: здесь снова из-за пробрасывания исключения вывод сообщения не учитывается:
         assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
                 contains(DATA_INPUT_IS_COMPLETED_WITH_ESC.getMessage()));
     }
-    @Test (expected = ErrCountCauseException.class)
+
+    @Test(expected = ErrCountCauseException.class)
     public void testIsDataInputBreakWithEsc_WithErrorCountMoreThanZero() throws ErrCountCauseException {
         // method condition (if) is fulfilled:
         oneLineArgs.add(0, "esc");
@@ -164,11 +173,15 @@ public class TestDataInputValidator {
         assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
                 contains(DATA_INPUT_IS_COMPLETED_WITH_ESC.getMessage()));
     }
+
     @Test
     public void testInputDataQuantityIsRedundant() throws ErrCountCauseException {
-        assertFalse(validator.inputDataQuantityIsRedundant(userCarsToRace, oneLineArgs));
-    }
+        assertFalse(validator.inputDataQuantityIsRedundant(oneLineArgs));
+        for (int i = 0; i < 6; i++) {
+    oneLineArgs.add();
+        }
 
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package testSupport;
+package testSupport.forSystemOutRedirect;
 
 import java.io.File;
 import java.io.FileReader;
