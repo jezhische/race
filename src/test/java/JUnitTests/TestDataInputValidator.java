@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import static dataStorageAndProcessing.MessageStore.*;
 import static org.junit.Assert.*;
-import static testSupport.UserInputEnam.*;
+import static testSupport.UserInputStore.*;
 
 /**
  * Created by Ежище on 14.08.2016.
@@ -112,13 +112,15 @@ public class TestDataInputValidator {
 
     @Test
     public void testIsEmptyLine() throws ErrCountCauseException {
-        sysOut.redirectOut();
-        assertFalse(validator.isEmptyLine(MASHKA_RIGHT_CAR.getUserInputSample()));
-        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
+        // method condition (if) is fulfilled:
         sysOut.redirectOut();
         assertTrue(validator.isEmptyLine(EMPTY_LINE.getUserInputSample()));
         assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
                 contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+        // else is fulfilled:
+        sysOut.redirectOut();
+        assertFalse(validator.isEmptyLine(MASHKA_RIGHT_CAR.getUserInputSample()));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
     }
 
     @Test
@@ -177,12 +179,73 @@ public class TestDataInputValidator {
 
     @Test
     public void testInputDataQuantityIsRedundant() throws ErrCountCauseException {
-        assertFalse(validator.inputDataQuantityIsRedundant(oneLineArgs));
+        // method condition (if) is fulfilled:
         for (int i = 0; i < 6; i++) {
-    oneLineArgs.add();
+            oneLineArgs.add("something");
         }
-
+        sysOut.redirectOut();
+        assertTrue(validator.inputDataQuantityIsRedundant(oneLineArgs));
+        String message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
+        assertTrue(message.contains(String.format(REDUNDANT_DATA_MSG.getMessage(), oneLineArgs.get(0))));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+        // else is fulfilled:
+        sysOut.redirectOut();
+        oneLineArgs.clear();
+        assertFalse(validator.inputDataQuantityIsRedundant(oneLineArgs));
+        oneLineArgs.add("something");
+        assertFalse(validator.inputDataQuantityIsRedundant(oneLineArgs));
+        assertFalse(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
+                contains((String.format(REDUNDANT_DATA_MSG.getMessage(), oneLineArgs.get(0)))));
+    }
+    @Test
+    public void testInputDataQuantityIsInsufficient() throws ErrCountCauseException {
+        // method condition (if) is fulfilled:
+        for (int i = 0; i < 4; i++) {
+            oneLineArgs.add("something");
+        }
+        sysOut.redirectOut();
+        assertTrue(validator.inputDataQuantityIsInsufficient(oneLineArgs));
+        String message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
+        assertTrue(message.contains(String.format(INSUFFICIENT_DATA_MSG.getMessage(), oneLineArgs.get(0))));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+        // else is fulfilled:
+        sysOut.redirectOut();
+        oneLineArgs.add("something");
+        assertFalse(validator.inputDataQuantityIsInsufficient(oneLineArgs));
+        assertFalse(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
+                contains((String.format(INSUFFICIENT_DATA_MSG.getMessage(), oneLineArgs.get(0)))));
     }
 
+    @Test
+        public void testTryToDoubleValidator_IfIsFulfilled() throws ErrCountCauseException {
+        // method condition (if) is fulfilled:
+        for (int i = 0; i < 5; i++) {
+            oneLineArgs.add(i, "something");
+        }
+        sysOut.redirectOut();
+        assertTrue(validator.tryToDoubleValidator(oneLineArgs));
+        String message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
+        assertTrue(message.contains(String.format(INCORRECT_DOUBLE_FORMAT_PARAMETER_MSG.getMessage(), oneLineArgs.get(2))));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
 
+        oneLineArgs.set(4, "0.5");
+        sysOut.redirectOut();
+        assertTrue(validator.tryToDoubleValidator(oneLineArgs));
+        message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
+        assertTrue(message.contains(String.format(INCORRECT_DOUBLE_FORMAT_PARAMETER_MSG.getMessage(), oneLineArgs.get(2))));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+
+        oneLineArgs.set(3, "125.5");
+        sysOut.redirectOut();
+        assertTrue(validator.tryToDoubleValidator(oneLineArgs));
+        message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
+        assertTrue(message.contains(String.format(INCORRECT_DOUBLE_FORMAT_PARAMETER_MSG.getMessage(), oneLineArgs.get(2))));
+        assertTrue(message.contains(ERR_COUNT_PENULT_LEVEL_MSG.getMessage()));
+
+        // else is fulfilled:
+        oneLineArgs.set(2, "456");
+        sysOut.redirectOut();
+        assertFalse(validator.tryToDoubleValidator(oneLineArgs));
+
+    }
 }
