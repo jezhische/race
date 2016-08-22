@@ -4,6 +4,7 @@ import cars.MashkaCar;
 import cars.Vehicle;
 import org.junit.*;
 import supportedClasses.*;
+
 import testSupport.forSystemOutRedirect.FileToString;
 import testSupport.forSystemOutRedirect.OutToFileRedirect;
 
