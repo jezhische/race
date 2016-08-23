@@ -135,8 +135,7 @@ public class TestDataInputValidator {
         sysOut.redirectOut();
         oneLineArgs.add("something");
         assertFalse(validator.isNullLine(oneLineArgs));
-        assertFalse(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
-                contains(INCORRECT_DATA_INPUT_FORMAT.getMessage()));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
     }
 
     @Test
@@ -151,6 +150,7 @@ public class TestDataInputValidator {
         sysOut.redirectOut();
         oneLineArgs.set(0, "something");
         assertFalse(validator.isDataInputBreakWithEsc(userCarsToRace, oneLineArgs));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
     }
 
     @Test(expected = ErrCountCauseException.class)
@@ -194,9 +194,9 @@ public class TestDataInputValidator {
         assertFalse(validator.inputDataQuantityIsRedundant(oneLineArgs));
         oneLineArgs.add("something");
         assertFalse(validator.inputDataQuantityIsRedundant(oneLineArgs));
-        assertFalse(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
-                contains((String.format(REDUNDANT_DATA_MSG.getMessage(), oneLineArgs.get(0)))));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
     }
+
     @Test
     public void testInputDataQuantityIsInsufficient() throws ErrCountCauseException {
         // method condition (if) is fulfilled:
@@ -212,12 +212,11 @@ public class TestDataInputValidator {
         sysOut.redirectOut();
         oneLineArgs.add("something");
         assertFalse(validator.inputDataQuantityIsInsufficient(oneLineArgs));
-        assertFalse(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).
-                contains((String.format(INSUFFICIENT_DATA_MSG.getMessage(), oneLineArgs.get(0)))));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
     }
 
     @Test
-        public void testTryToDoubleValidator_IfIsFulfilled() throws ErrCountCauseException {
+    public void testTryToDoubleValidator_IfIsFulfilled() throws ErrCountCauseException {
         // method condition (if) is fulfilled:
         for (int i = 0; i < 5; i++) {
             oneLineArgs.add(i, "something");
@@ -246,6 +245,34 @@ public class TestDataInputValidator {
         oneLineArgs.set(2, "456");
         sysOut.redirectOut();
         assertFalse(validator.tryToDoubleValidator(oneLineArgs));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
+    }
 
+    @Test
+    public void testIsNoSuchClass() throws ErrCountCauseException {
+        oneLineArgs.add(0, "something");
+        // "default" is fulfilled:
+        sysOut.redirectOut();
+        oneLineArgs.add(1, "something");
+        assertTrue(validator.isNoSuchClass(oneLineArgs));
+        String message = outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt"));
+        assertTrue(message.contains(String.format(INCORRECT_CLASS_MSG.getMessage(), oneLineArgs.get(0))));
+        assertTrue(message.contains(ERR_COUNT_FIRST_LEVEL_MSG.getMessage()));
+        //switch is fulfilled:
+        sysOut.redirectOut();
+        oneLineArgs.set(1, "Mashka");
+        assertFalse(validator.isNoSuchClass(oneLineArgs));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
+
+        sysOut.redirectOut();
+        oneLineArgs.set(1, "BMW");
+        assertFalse(validator.isNoSuchClass(oneLineArgs));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
+
+        sysOut.redirectOut();
+        oneLineArgs.set(1, "Ferrari");
+        assertFalse(validator.isNoSuchClass(oneLineArgs));
+        assertTrue(outputMsg.readFileToString(new File("src\\main\\resources\\testSupport\\output.txt")).equals(""));
     }
 }
+
