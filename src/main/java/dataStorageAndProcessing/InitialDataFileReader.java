@@ -8,7 +8,6 @@ import cars.Vehicle;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,13 +18,14 @@ public class InitialDataFileReader extends Vehicle {
 
     /* Список, в котором будет храниться какое-то количество массивов со значениями аргументов, полученными из файла,
          * а также, возможно, еще и дополнительно забитыми вручную пользователем: **/
-    private List<Vehicle> carsToRace = new ArrayList<>();
+//    private List<Vehicle> carsToRace = new ArrayList<>();
+//
+//    public List<Vehicle> getCarsToRace() {
+//        return carsToRace;
+//    }
 
-    public List<Vehicle> getCarsToRace() {
-        return carsToRace;
-    }
-
-    public void readArgsFromFile() {
+    public ArrayList<Vehicle> readArgsFromFile() {
+        ArrayList<Vehicle> carsToRace = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("src//main//resources//pilotProbesData//" +
                 "Probe4.txt"))) {
             /* переменная для записи прочитанной строки: **/
@@ -116,17 +116,18 @@ public class InitialDataFileReader extends Vehicle {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return carsToRace;
     }
 
 
     public static void main(String[] args) {
         InitialDataFileReader gsa = new InitialDataFileReader();
-        gsa.readArgsFromFile();
+        ArrayList<Vehicle> proba = gsa.readArgsFromFile();
         int y = 0;
-        System.out.println(gsa.carsToRace.size());
-        while (y < gsa.carsToRace.size()) {
-            System.out.println("acceleration of car " + y + " " + gsa.carsToRace.get(y).getName() + " = " +
-                    gsa.carsToRace.get(y).getAcceleration());
+        System.out.println(proba.size());
+        while (y < proba.size()) {
+            System.out.println("acceleration of car " + y + " " + proba.get(y).getName() + " = " +
+                    proba.get(y).getAcceleration());
             y++;
         }
     }

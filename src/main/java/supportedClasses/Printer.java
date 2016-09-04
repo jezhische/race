@@ -10,7 +10,7 @@ public class Printer {
     public static String printData(Vehicle vehicle){
         String result = null;
         if (vehicle.isCheckParameters()) {
-            result = "Ошибка: исходные данные автомобиля " + (String)vehicle.getName() + " введены неверно. " +
+            result = "Ошибка: исходные данные автомобиля " + vehicle.getName() + " введены неверно. " +
                     "Автомобиль дисквалифицирован.";
         }
         else {
@@ -18,8 +18,8 @@ public class Printer {
             int hours = (int) Math.floor(roundCheckInTime / 3600);
             int min = (int) Math.floor((roundCheckInTime - hours * 3600) / 60);
             int sec = roundCheckInTime % 60;
-            result ="Автомобиль " + (String)vehicle.getName() + " прошел трассу за " + String.valueOf(hours) + " часов "
-                    + String.valueOf(min) + " минут " + String.valueOf(sec) + " секунд;";
+            result = String.format("Автомобиль %s прошел трассу за %d часов %d минут %d секунд;", vehicle.getName(),
+                    hours, min, sec);
         }
         return result;
     }

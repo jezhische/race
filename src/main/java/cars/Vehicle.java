@@ -3,10 +3,12 @@ package cars;
 
 import entities.CarModel;
 
+import java.io.Serializable;
+
 /**
  * Created by Ежище on 04.05.2016.
  */
-public class Vehicle {
+public class Vehicle implements Serializable {
     /**
      * the length of each straight segment, m:
      */
@@ -28,7 +30,7 @@ public class Vehicle {
      */
     private double mobility;
     /**
-     * registered time of the hole race:
+     * registered time of the whole race:
      */
     private double registeredTime = 0;
     /**
@@ -47,10 +49,18 @@ public class Vehicle {
      * переменная для того, чтобы гневно ругаться при неправильно введенных исходниках:
      */
     private boolean checkParameters = false;
+    /**
+     * car average speed of the whole race, m/sec:
+     */
+    private double averageSpeed;
 
-    public Vehicle(){};
 
-    public Vehicle (CarModel carModel) {
+    public Vehicle() {
+    }
+
+    ;
+
+    public Vehicle(CarModel carModel) {
         setName(carModel.name);
         setMarker(carModel.marker);
         setAcceleration(carModel.acceleration);
@@ -69,12 +79,12 @@ public class Vehicle {
     }
 
     public void setName(String name) {
-            if (name != null)
-                this.name = name;
-            else {
-                checkParameters = true;
-                System.out.println("Не введено имя автомобиля класса " + getMarker() + ".");
-            }
+        if (name != null)
+            this.name = name;
+        else {
+            checkParameters = true;
+            System.out.println("Не введено имя автомобиля класса " + getMarker() + ".");
+        }
     }
 
     public void setMarker(String marker) {
@@ -83,37 +93,38 @@ public class Vehicle {
 
     public void setAcceleration(double acceleration) {
 //        try {
-            if (acceleration > 0)
-                this.acceleration = acceleration;
-            else {
-                checkParameters = true;
-                System.out.printf("Автомобиль %s: ускорение должно быть больше 0: ошибка ввода.\n", name);
+        if (acceleration > 0)
+            this.acceleration = acceleration;
+        else {
+            checkParameters = true;
+            System.out.printf("Автомобиль %s: ускорение должно быть больше 0: ошибка ввода.\n", name);
 //                throw new Exception();
-            }
+        }
 //        } catch (Exception e) {}
     }
 
     public void setFullSpeed(double fullSpeed) {
-            if (fullSpeed > 0)
-                this.fullSpeed = fullSpeed;
-            else {
-                checkParameters = true;
-                System.out.printf("Автомобиль %s: максимальная скорость должна быть больше 0: ошибка ввода.\n", name);
-            }
+        if (fullSpeed > 0)
+            this.fullSpeed = fullSpeed;
+        else {
+            checkParameters = true;
+            System.out.printf("Автомобиль %s: максимальная скорость должна быть больше 0: ошибка ввода.\n", name);
+        }
     }
 
     public void setMobility(double mobility) {
-            if (1 >= mobility && mobility >= 0)
-                this.mobility = mobility;
-            else {
-                checkParameters = true;
-                System.out.printf("Автомобиль %s: коэффициент потери скорости \"маневренность\" " +
-                        "указывается в пределах от 0 до 1: ошибка ввода.\n", name);
-            }
+        if (1 >= mobility && mobility > 0)
+            this.mobility = mobility;
+        else {
+            checkParameters = true;
+            System.out.printf("Автомобиль %s: коэффициент потери скорости \"маневренность\" " +
+                    "указывается в пределах больше 0 до 1: ошибка ввода.\n", name);
+        }
     }
 
     // Метод для обнуления аргументов конструктора без ругательств со стороны сеттеров (нужен в InitialDataScannerSystemIn):
-    public void setNullConstructorArguments(){
+    //TODO: check if I need it
+    public void setNullConstructorArguments() {
         name = null;
         marker = null;
         acceleration = 0;
@@ -127,7 +138,7 @@ public class Vehicle {
 
     public void setDirectSegmentTime(double directSegmentTime) {
         this.directSegmentTime = directSegmentTime;
-    }
+    }//TODO: check if I use it somewhere
 
     public void setInitialSpeed(double initialSpeed) {
         this.initialSpeed = initialSpeed;
@@ -135,11 +146,11 @@ public class Vehicle {
 
     public void setTerminalSpeed(double terminalSpeed) {
         this.terminalSpeed = terminalSpeed;
-    }
+    }//TODO: check if I use it somewhere
 
     public void setCheckParameters(boolean checkParameters) {
         this.checkParameters = checkParameters;
-    }
+    }//TODO: check if I use it somewhere
 
     public String getName() {
         return name;
@@ -171,7 +182,7 @@ public class Vehicle {
 
     public double getInitialSpeed() {
         return initialSpeed;
-    }
+    } //TODO: check if I use it somewhere
 
     public double getTerminalSpeed() {
         return terminalSpeed;
@@ -179,6 +190,10 @@ public class Vehicle {
 
     public boolean isCheckParameters() {
         return checkParameters;
+    }
+
+    public double getAverageSpeed() {
+        return averageSpeed = 20 * SPACING / registeredTime;
     }
 
 
@@ -215,12 +230,12 @@ public class Vehicle {
         return this;
     }
 
-    public static void main(String[] args) {
-        Vehicle v = new Vehicle("v", "V", 12, 500, 0.3);
-        v.goVehicle();
-        System.out.println(v.terminalSpeed);
-        v = new Vehicle(null, "cars.MashkaCar", 0, -5, 3);
-        v.goVehicle();
-        System.out.println(v.terminalSpeed);
-    }
+//    public static void main(String[] args) {
+//        Vehicle v = new Vehicle("v", "V", 12, 500, 0.3);
+//        v.goVehicle();
+//        System.out.println(v.terminalSpeed);
+//        v = new Vehicle(null, "cars.MashkaCar", 0, -5, 3);
+//        v.goVehicle();
+//        System.out.println(v.terminalSpeed);
+//    }
 }

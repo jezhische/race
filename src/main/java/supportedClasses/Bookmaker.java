@@ -82,11 +82,11 @@ public class Bookmaker extends Vehicle {
     public static void main(String[] args) {
         Bookmaker b = new Bookmaker();
         b.dataInput();
-        System.out.println("В гонках участвует " + b.dataFromFile.getCarsToRace().size() + " автомобиля из предустановленного списка.");
+        System.out.println("В гонках участвует " + b.dataFromFile.readArgsFromFile().size() + " автомобиля из предустановленного списка.");
         int y = 0;
-        while (y < b.dataFromFile.getCarsToRace().size()) {
-            System.out.println("acceleration of car " + y + " " + b.dataFromFile.getCarsToRace().get(y).getName() + " = " +
-                    b.dataFromFile.getCarsToRace().get(y).getAcceleration());
+        while (y < b.dataFromFile.readArgsFromFile().size()) {
+            System.out.println("acceleration of car " + y + " " + b.dataFromFile.readArgsFromFile().get(y).getName() + " = " +
+                    b.dataFromFile.readArgsFromFile().get(y).getAcceleration());
             y++;
         }
     }

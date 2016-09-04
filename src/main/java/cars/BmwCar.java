@@ -18,6 +18,7 @@ public class BmwCar extends Vehicle {
     public Vehicle goVehicle() {
         // Поехали по трассе:
             for (int i = 0; i < 20; i++) {
+                super.goVehicle();
                 setRegisteredTime(getRegisteredTime()+getDirectSegmentTime());
                 setInitialSpeed(getTerminalSpeed() * getMobility());
                 if (getTerminalSpeed() <= getFullSpeed() / (3.6 * 2))
