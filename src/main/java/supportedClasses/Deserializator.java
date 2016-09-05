@@ -1,6 +1,5 @@
 package supportedClasses;
 
-import cars.MashkaCar;
 import cars.Vehicle;
 
 import java.io.File;
@@ -11,32 +10,45 @@ import java.io.ObjectInputStream;
  * Created by Ежище on 04.09.2016.
  */
 public class Deserializator {
+    private File dir = new File("src\\main\\resources\\serialStore");
 
-    double regTime;
-    double averSpeed;
-    String nm;
-    public Vehicle deserialize(File log) {
-        try(ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream(log))) {
-            MashkaCar m = (MashkaCar) deserializator.readObject();
-            regTime = m.getRegisteredTime();
-            averSpeed = m.getAverageSpeed();
-            nm = m.getName();
-            return m;
-        } catch(Exception e) {
+    private boolean dirIsNotEmpty(File dir) {
+        this.dir = dir;
+        try {
+            return (dir.exists() && dir.isDirectory() && dir.listFiles().length != 0);
+        } catch(NullPointerException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
-            return null;
+            return false;
         }
+    }
+
+    public Vehicle deserialize(File log) { //TODO: здесь список-дерево в аргументы, и возвращать не Vehicle, а этот список
+//        try {
+//
+//        }
+//        catch(FileNotFoundException e) {
+//            System.out.println(e.getMessage());
+//        }
+        if (dirIsNotEmpty(dir)) {
+            for (File item:
+                 dir.listFiles()) {
+                try(ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream(item))) {
+                    return (Vehicle) deserializator.readObject(); //TODO: здесь записать в список с сортировкой, например, в дерево
+                } catch(Exception e) { // здесь много всяких исключений
+                    System.out.println(e.getMessage());
+                    return null;
+                }
+            }
+
+        }
+
     }
 
     public static void main(String[] args) {
         Deserializator deser = new Deserializator();
         File file = new File("src\\main\\resources\\serialStore\\log0_mashka_cars.MashkaCar.dat");
-        deser.deserialize(file);
-        System.out.println(deser.regTime);
-        System.out.println(deser.averSpeed);
-        System.out.println(deser.nm);
-        System.out.println(deser.deserialize(file).getAcceleration());
-//        System.out.println(ser.somewhat);
+        Vehicle car = deser.deserialize(file);
+        System.out.printf("\nавтомобиль %s класса %s прошел трассу за %3.1f секунд со средней скоростью %3.2f м/сек",
+                car.getName(), car.getMarker(), car.getRegisteredTime(), car.getAverageSpeed());
     }
 }
