@@ -15,15 +15,18 @@ import java.util.ArrayList;
  */
 public class Serializator implements Runnable {
 
+    /** list of the cars ready to race: */
     private ArrayList<Vehicle> carList = new ArrayList<>();
 
-    private int i;
+    /** counter of the serializing cars: */
+    private int counter;
 
+    /** for specification the path to the cars serialization: */
     private File dir = new File("src\\main\\resources\\serialStore");
 
-    Serializator(ArrayList<Vehicle> carList, int i) {
+    Serializator(ArrayList<Vehicle> carList, int counter) {
         this.carList = carList;
-        this.i = i;
+        this.counter = counter;
     }
 
     Serializator() {
@@ -59,10 +62,10 @@ public class Serializator implements Runnable {
     @Override
     public void run() { //TODO: стереть все выводы в консоль
         if (fileDealer(dir)) {
-            Vehicle car = carList.get(i);
+            Vehicle car = carList.get(counter);
             try (ObjectOutputStream serialize = new ObjectOutputStream
                     (new FileOutputStream(String.format("src\\main\\resources\\serialStore\\log%d_%s_%s.dat",
-                            i, car.getName(), car.getMarker())))) {
+                            counter, car.getName(), car.getMarker())))) {
                 car.goVehicle();
                 System.out.printf("внутри: %s %5.1f %7.2f\n", car.getName(), car.getRegisteredTime(), car.getAverageSpeed());
                 serialize.writeObject(car);
@@ -76,8 +79,9 @@ public class Serializator implements Runnable {
 
     /** to create some concurrent streams */
     public void go(ArrayList<Vehicle> carList) {
-        for (i = 0; i < carList.size(); i++) {
-            new Thread(new Serializator(carList, i)).start();
+//        this.carList = carList;
+        for (counter = 0; counter < carList.size(); counter++) {
+            new Thread(new Serializator(carList, counter)).start();
 //            try { // это чтобы потоки выстроились по порядку
 //                Thread.sleep(500);
 //            } catch (InterruptedException e) {
@@ -85,23 +89,29 @@ public class Serializator implements Runnable {
 //            }
         }
     }
+    public void checkThreads() { // TODO: не работает даже это! Почему?
+        while (carList.size() != dir.listFiles().length)
+            go(carList);
+//        if (carList.size() != dir.listFiles().length)
+//            checkThreads();
+    }
 
 // TODO: потом уничтожить main
     public static void main(String[] args) {
         InitialDataFileReader readFile = new InitialDataFileReader();
         ArrayList<Vehicle> probe = readFile.readArgsFromFile();
-//        for (int i = 0; i < probe.size(); i++) {
-//            System.out.printf("класс %d = %s;\n", i, probe.get(i).getClass());
-//            Vehicle raceCar = probe.get(i).goVehicle();
+//        for (int counter = 0; counter < probe.size(); counter++) {
+//            System.out.printf("класс %d = %s;\n", counter, probe.get(counter).getClass());
+//            Vehicle raceCar = probe.get(counter).goVehicle();
 //            double time = raceCar.getRegisteredTime();
 //            double avSpeed = raceCar.getAverageSpeed();
 //            System.out.printf("%s прошел трассу за %5.1f секунд, средняя скорость %5.2f м/с\n",
 //                    raceCar.getName(), time, avSpeed);
-//
-////            new Thread(new Serializator(probe)).start();
 //        }
 
-        new Serializator().go(probe);
+        Serializator ser = new Serializator();
+        ser.go(probe);
+        ser.checkThreads();
 
     }
 }
