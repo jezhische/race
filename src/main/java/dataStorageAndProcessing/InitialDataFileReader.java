@@ -6,6 +6,7 @@ import cars.MashkaCar;
 import cars.Vehicle;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -24,10 +25,13 @@ public class InitialDataFileReader extends Vehicle {
 //        return carsToRace;
 //    }
 
+    private File file;
+
+    public InitialDataFileReader(File file) {this.file = file;}
+
     public ArrayList<Vehicle> readArgsFromFile() {
         ArrayList<Vehicle> carsToRace = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src//main//resources//pilotProbesData//" +
-                "Probe4.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) { // "src//main//resources//pilotProbesData//Probe4.txt"
             /* переменная для записи прочитанной строки: **/
             String carFromFile; // это будет прочитанная строчка
             /* счетчик прочитанных строк: **/
@@ -121,7 +125,7 @@ public class InitialDataFileReader extends Vehicle {
 
 
     public static void main(String[] args) {
-        InitialDataFileReader gsa = new InitialDataFileReader();
+        InitialDataFileReader gsa = new InitialDataFileReader(new File("src//main//resources//pilotProbesData//Probe4.txt"));
         ArrayList<Vehicle> proba = gsa.readArgsFromFile();
         int y = 0;
         System.out.println(proba.size());

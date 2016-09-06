@@ -4,6 +4,7 @@ import cars.Vehicle;
 import dataStorageAndProcessing.InitialDataFileReader;
 import dataStorageAndProcessing.InitialDataScannerSystemIn;
 
+import java.io.File;
 import java.util.Scanner;
 
 /**
@@ -15,7 +16,7 @@ public class Bookmaker extends Vehicle {
 //    }
     InitialDataScannerSystemIn userScannedData = new InitialDataScannerSystemIn();
 
-    InitialDataFileReader dataFromFile = new InitialDataFileReader();
+    InitialDataFileReader dataFromFile = new InitialDataFileReader(new File("src//main//resources//pilotProbesData//Probe4.txt"));
 
     public Vehicle dataInput() {
         System.out.println("Приветствуем вас на гонках. \nВы можете выбрать автомобили любой из трех марок: " +

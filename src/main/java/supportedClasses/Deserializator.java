@@ -4,19 +4,18 @@ import cars.Vehicle;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
- * Created by Ежище on 04.09.2016.
+ * Created by Ежище on 06.09.2016.
  */
-public class Deserializator implements Runnable {
+public class Deserializator {
     /**
-     * for specification the path to the serialized cars after race:
-     */
+    * for specification the path to the serialized cars after race:
+            */
     private File dir = new File("src\\main\\resources\\serialStore");
 
     private CarsResultComparator carComparator = new CarsResultComparator();
@@ -24,10 +23,6 @@ public class Deserializator implements Runnable {
      * for writing cars after race with sorting:
      */
     private TreeSet<Vehicle> carsAfterRace = new TreeSet<>(carComparator);
-    /**
-     * for specification of new ObjectInputStream in run():
-     */
-    private FileInputStream fileReader;
 //    /**
 //     * counter of the serialized cars:
 //     */
@@ -36,35 +31,33 @@ public class Deserializator implements Runnable {
     /**
      * for specification of the parameters of sorting cars after race:
      */
-    private class CarsResultComparator implements Comparator<Vehicle> {
+    private class CarsResultComparator implements Comparator<Vehicle>  {
         @Override
         public int compare(Vehicle o1, Vehicle o2) {
-            if (o1.getRegisteredTime() < o2.getRegisteredTime())
+            if (o1.getAverageSpeed() < o2.getAverageSpeed())
                 return -1;
-            else if (o1.getRegisteredTime() > o2.getRegisteredTime())
+            else if (o1.getAverageSpeed() > o2.getAverageSpeed())
                 return 1;
             else
                 return 0;
         }
     }
 
-    private boolean dirIsNotEmpty(File dir) {
+    private File[] listFiles(File dir) { // по сути, переопределение метода public File[] listFiles() (хотя ни
+        // интерфейс не имплементирован, ни суперкласса нет) - просто чтобы отловить исключение. Может, и не нужно.
         this.dir = dir;
         try {
-            return (dir.exists() && dir.isDirectory() && dir.listFiles().length != 0);
+        return dir.listFiles();
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
-            return false;
+            return null;
         }
     }
 
-    @Override
-    public void run() {
-        try (ObjectInputStream deserializator = new ObjectInputStream(fileReader)) {
-            carsAfterRace.add((Vehicle) deserializator.readObject());
-        } catch (Exception e) { // здесь много всяких исключений
-            System.out.println(e.getMessage());
-        }
+
+    private boolean dirIsNotEmpty(File dir) {
+        this.dir = dir;
+            return (dir.exists() && dir.isDirectory() && listFiles(dir).length != 0);
     }
 
     /**
@@ -72,17 +65,15 @@ public class Deserializator implements Runnable {
      */
     public TreeSet<Vehicle> deserialize() {
         if (dirIsNotEmpty(dir)) {
-            for (File item : dir.listFiles()) {
-                try {
-                    fileReader = new FileInputStream(item);
-                    new Thread(new Deserializator()).start();
-                } catch (IOException e) {
+            for (File item : listFiles(dir)) {
+                try(ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream(item))) {
+                    carsAfterRace.add((Vehicle) deserializator.readObject());
+                } catch (Exception e) { // здесь много всяких исключений
                     System.out.println(e.getMessage());
                     return null;
                 }
             }
-        } else
-        {
+        } else {
             System.out.println("Directory is empty or does not exist");
             return null;
         }
@@ -91,14 +82,18 @@ public class Deserializator implements Runnable {
 
     public void printSortedResults() {
         Vehicle nextCar;
+        int counter = 1;
         Iterator<Vehicle> descendIter = carsAfterRace.descendingIterator();
         while (descendIter.hasNext()) {
             nextCar = descendIter.next();
-            System.out.printf("\nАвтомобиль %s класса %s прошел трассу за %3.1f секунд со средней скоростью %3.2f м/сек",
-                    nextCar.getName(), nextCar.getMarker(), nextCar.getRegisteredTime(), nextCar.getAverageSpeed());
+            System.out.printf("\n%d позиция. Автомобиль %s класса %s прошел трассу за %3.1f секунд со средней " +
+                            "скоростью %3.2f м/сек", counter, nextCar.getName(), nextCar.getMarker(),
+                    nextCar.getRegisteredTime(), nextCar.getAverageSpeed());
+            counter++;
         }
     }
 
+    // TODO: убрать потом main
     public static void main(String[] args) {
         Deserializator deser = new Deserializator();
 //        File file = new File("src\\main\\resources\\serialStore\\log0_mashka_cars.MashkaCar.dat");

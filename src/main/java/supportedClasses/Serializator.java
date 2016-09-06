@@ -83,7 +83,7 @@ public class Serializator implements Runnable {
         for (counter = 0; counter < carList.size(); counter++) {
             new Thread(new Serializator(carList, counter)).start();
 //            try { // это чтобы потоки выстроились по порядку
-//                Thread.sleep(500);
+//                Thread.sleep(50);
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
@@ -98,7 +98,7 @@ public class Serializator implements Runnable {
 
 // TODO: потом уничтожить main
     public static void main(String[] args) {
-        InitialDataFileReader readFile = new InitialDataFileReader();
+        InitialDataFileReader readFile = new InitialDataFileReader(new File("src//main//resources//pilotProbesData//Probe4.txt"));
         ArrayList<Vehicle> probe = readFile.readArgsFromFile();
 //        for (int counter = 0; counter < probe.size(); counter++) {
 //            System.out.printf("класс %d = %s;\n", counter, probe.get(counter).getClass());
@@ -111,7 +111,7 @@ public class Serializator implements Runnable {
 
         Serializator ser = new Serializator();
         ser.go(probe);
-        ser.checkThreads();
+//        ser.checkThreads();
 
     }
 }
