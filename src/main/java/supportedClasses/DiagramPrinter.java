@@ -24,7 +24,9 @@ public class DiagramPrinter {
         while (descendIter.hasNext()) {
             String timeStack = "";
             nextCar = descendIter.next();
-            int timeDiagram = (int)(nextCar.getRegisteredTime() * timeForTwoPercentSpasing);
+            int timeDiagram = (int)Math.round(nextCar.getRegisteredTime() * timeForTwoPercentSpasing); // округление в
+            // меньшую сторону, как требуется по условию задачи, не работает - получается 49 палочек там, где
+            // должно быть 50.
             for (int i = 0; i < timeDiagram; i++)
                 timeStack = timeStack.concat("|");
             for (int i = 0; i < (50 - timeDiagram); i++)
@@ -39,7 +41,7 @@ public class DiagramPrinter {
         while (descendIter2.hasNext()) {
             String speedStack = "";
             nextCar = descendIter2.next();
-            int speedDiagram = (int)(nextCar.getAverageSpeed() * speedForTwoPercentSpasing);
+            int speedDiagram = (int)Math.round(nextCar.getAverageSpeed() * speedForTwoPercentSpasing);
             for (int i = 0; i < speedDiagram; i++)
                 speedStack = speedStack.concat("|");
             for (int i = 0; i < (50 - speedDiagram); i++)
