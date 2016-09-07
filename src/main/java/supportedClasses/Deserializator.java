@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import static supportedClasses.DiagramPrinter.diaPrint;
+
 /**
  * Created by Ежище on 06.09.2016.
  */
@@ -100,7 +102,9 @@ public class Deserializator {
 //        Vehicle car = deser.deserialize(file);
 //        System.out.printf("\nавтомобиль %s класса %s прошел трассу за %3.1f секунд со средней скоростью %3.2f м/сек",
 //                car.getName(), car.getMarker(), car.getRegisteredTime(), car.getAverageSpeed());
-        deser.deserialize();
-        deser.printSortedResults();
+        diaPrint(deser.deserialize());
+        System.out.println("");
+//        deser.printSortedResults();
+
     }
 }
