@@ -50,7 +50,7 @@ public class Vehicle implements Serializable {
      */
     private boolean checkParameters = false;
     /**
-     * car average speed of the whole race, m/sec:
+     * car average speed of the whole race, km/h:
      */
     private double averageSpeed;
 
@@ -193,7 +193,7 @@ public class Vehicle implements Serializable {
     }
 
     public double getAverageSpeed() {
-        return averageSpeed = 20 * SPACING / registeredTime;
+        return averageSpeed = 20 * 3.6 * SPACING / registeredTime;
     }
 
 
