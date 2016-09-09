@@ -78,22 +78,20 @@ public class Serializator implements Runnable {
 
     /** to create some concurrent streams */
     public void go(ArrayList<Vehicle> carList) {
-//        this.carList = carList;
-        for (counter = 0; counter < carList.size(); counter++) {
-            new Thread(new Serializator(carList, counter)).start();
-//            try { // это чтобы потоки выстроились по порядку
-//                Thread.sleep(50);
+        Thread[] pool = new Thread[carList.size()];
+            for (counter = (carList.size() - 1); counter >= 0; counter--) {
+                pool[counter] = new Thread(new Serializator(carList, counter));
+                pool[counter].start();
+            }
+//            try { // join() ничего нового не добавляет, видимо, потоки успевают завершиться раньше
+//                for (counter = 0; counter < carList.size(); counter++) {
+//                    pool[counter].join();
+//                }
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
         }
-    }
-    public void checkThreads() { // TODO: не работает даже это! Почему?
-        while (carList.size() != dir.listFiles().length)
-            go(carList);
-//        if (carList.size() != dir.listFiles().length)
-//            checkThreads();
-    }
+
 
 // TODO: потом уничтожить main
     public static void main(String[] args) {
@@ -110,7 +108,5 @@ public class Serializator implements Runnable {
 
         Serializator ser = new Serializator();
         ser.go(probe);
-//        ser.checkThreads();
-
     }
 }
