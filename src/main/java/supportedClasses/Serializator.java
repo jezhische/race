@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by Ежище on 03.09.2016.
  */
-public class Serializator implements Runnable {
+public class Serializator implements Runnable, Cloneable {
 
     /** list of the cars ready to race: */
     private ArrayList<Vehicle> carList = new ArrayList<>();
@@ -68,7 +68,9 @@ public class Serializator implements Runnable {
                 car.goVehicle();
                 System.out.printf("внутри: %s %5.1f %7.2f\n", car.getName(), car.getRegisteredTime(), car.getAverageSpeed());
                 serialize.writeObject(car);
+                serialize.flush();
             } catch (IOException e) {
+                System.out.println("выкинуло!");
                 e.printStackTrace();
             }
             System.out.println(Thread.currentThread().getName());
@@ -78,8 +80,10 @@ public class Serializator implements Runnable {
 
     /** to create some concurrent streams */
     public void go(ArrayList<Vehicle> carList) {
+//        ArrayList<Vehicle> newCarList = (ArrayList<Vehicle>)carList.clone();
         Thread[] pool = new Thread[carList.size()];
-            for (counter = (carList.size() - 1); counter >= 0; counter--) {
+//        for (counter = (carList.size() - 1); counter >= 0; counter--)
+            for (counter = 0; counter < carList.size(); counter++) {
                 pool[counter] = new Thread(new Serializator(carList, counter));
                 pool[counter].start();
             }
