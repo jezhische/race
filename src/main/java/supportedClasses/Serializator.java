@@ -12,15 +12,21 @@ import java.util.ArrayList;
 /**
  * Created by Ежище on 03.09.2016.
  */
-public class Serializator implements Runnable, Cloneable {
+public class Serializator implements Runnable {
 
-    /** list of the cars ready to race: */
+    /**
+     * list of the cars ready to race:
+     */
     private ArrayList<Vehicle> carList = new ArrayList<>();
 
-    /** counter of the serializing cars: */
+    /**
+     * counter of the serializing cars:
+     */
     private int counter;
 
-    /** for specification the path to the cars serialization: */
+    /**
+     * for specification the path to the cars serialization:
+     */
     private File dir = new File("src\\main\\resources\\serialStore");
 
     Serializator(ArrayList<Vehicle> carList, int counter) {
@@ -31,17 +37,18 @@ public class Serializator implements Runnable, Cloneable {
     Serializator() {
     }
 
-    /** to create required directory for serialized files writing and to delete all the files there if it exists */
+    /**
+     * to create required directory for serialized files writing and to delete all the files there if it exists
+     */
     // (тут наверчено булиня, просто, чтобы поупражняться, можно было бы void):
     private boolean fileDealer(File dir) {
         this.dir = dir;
         try {
             if (!dir.exists()) {
                 dir.mkdir();
-            }
-            else {
+            } else {
                 if (dir.isDirectory()) { // && dir.listFiles().length != 0  - в этой строчке нужды нет, ошибка не вылазит
-                    for (File item:
+                    for (File item :
                             dir.listFiles()) {
                         item.delete(); // получаем список всех файлов в директории и стираем их в цикле один за другим.
                         // Проще было бы стереть всю директорию, но так интереснее
@@ -51,13 +58,15 @@ public class Serializator implements Runnable, Cloneable {
             if (dir.exists())
                 return (dir.listFiles().length == 0);
             return false;
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    /** to serialize results of the race in run() */
+    /**
+     * to serialize results of the race in run()
+     */
     @Override
     public void run() { //TODO: стереть все выводы в консоль
         if (fileDealer(dir)) {
@@ -78,26 +87,35 @@ public class Serializator implements Runnable, Cloneable {
         }
     }
 
-    /** to create some concurrent streams */
+    /**
+     * to create some concurrent streams
+     */
     public void go(ArrayList<Vehicle> carList) {
+        this.carList = carList;
 //        ArrayList<Vehicle> newCarList = (ArrayList<Vehicle>)carList.clone();
         Thread[] pool = new Thread[carList.size()];
 //        for (counter = (carList.size() - 1); counter >= 0; counter--)
-            for (counter = 0; counter < carList.size(); counter++) {
-                pool[counter] = new Thread(new Serializator(carList, counter));
-                pool[counter].start();
-            }
-//            try { // join() ничего нового не добавляет, видимо, потоки успевают завершиться раньше
-//                for (counter = 0; counter < carList.size(); counter++) {
-//                    pool[counter].join();
-//                }
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+        for (counter = 0; counter < carList.size(); counter++) {
+            pool[counter] = new Thread(new Serializator(carList, counter), "Thread " + String.valueOf(counter));
+//                pool[counter].start();
         }
+        startThreads(pool);
+//        try { // join() ничего нового не добавляет, видимо, потоки успевают завершиться раньше
+//            for (counter = 0; counter < carList.size(); counter++) {
+//                pool[counter].join();
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private static void startThreads(Thread[] threads) {
+        for (Thread t : threads)
+            t.start();
+    }
 
 
-// TODO: потом уничтожить main
+    // TODO: потом уничтожить main
     public static void main(String[] args) {
         InitialDataFileReader readFile = new InitialDataFileReader(new File("src//main//resources//pilotProbesData//Probe4.txt"));
         ArrayList<Vehicle> probe = readFile.readArgsFromFile();
