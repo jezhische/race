@@ -84,15 +84,16 @@ public class Serializator implements Runnable {
      */
     public void go(ArrayList<Vehicle> carList) {
         this.carList = carList;
-        ExecutorService executor = Executors.newCachedThreadPool();
+        ExecutorService executor = Executors.newFixedThreadPool(carList.size());
         for (counter = 0; counter < carList.size(); counter++) {
             Thread thread = new Thread(new Serializator(carList, counter), "Thread " + String.valueOf(counter));
             executor.execute(thread);
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+////                thread.join();
+//                thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         executor.shutdown();
     }
