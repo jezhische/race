@@ -14,19 +14,13 @@ import java.util.ArrayList;
  */
 public class Serializator implements Runnable {
 
-    /**
-     * list of the cars ready to race:
-     */
+    /** list of the cars ready to race: */
     private ArrayList<Vehicle> carList = new ArrayList<>();
 
-    /**
-     * counter of the serializing cars:
-     */
+    /** counter of the serializing cars: */
     private int counter;
 
-    /**
-     * for specification the path to the cars serialization:
-     */
+    /** for specification the path to the cars serialization: */
     private File dir = new File("src\\main\\resources\\serialStore");
 
     Serializator(ArrayList<Vehicle> carList, int counter) {
@@ -37,9 +31,7 @@ public class Serializator implements Runnable {
     Serializator() {
     }
 
-    /**
-     * to create required directory for serialized files writing and to delete all the files there if it exists
-     */
+    /** to create required directory for serialized files writing and to delete all the files there if it exists: */
     // (тут наверчено булиня, просто, чтобы поупражняться, можно было бы void):
     private boolean fileDealer(File dir) {
         this.dir = dir;
@@ -64,9 +56,7 @@ public class Serializator implements Runnable {
         }
     }
 
-    /**
-     * to serialize results of the race in run()
-     */
+    /** to serialize results of the race in run(): */
     @Override
     public void run() { //TODO: стереть все выводы в консоль
         if (fileDealer(dir)) {
