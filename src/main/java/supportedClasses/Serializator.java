@@ -8,25 +8,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Ежище on 03.09.2016.
  */
 public class Serializator implements Runnable {
 
-    /**
-     * list of the cars ready to race:
-     */
+    /** list of the cars ready to race: */
     private ArrayList<Vehicle> carList = new ArrayList<>();
 
-    /**
-     * counter of the serializing cars:
-     */
+    /** counter of the serializing cars: */
     private int counter;
 
-    /**
-     * for specification the path to the cars serialization:
-     */
+    /** for specification the path to the cars serialization: */
     private File dir = new File("src\\main\\resources\\serialStore");
 
     Serializator(ArrayList<Vehicle> carList, int counter) {
@@ -37,9 +33,7 @@ public class Serializator implements Runnable {
     Serializator() {
     }
 
-    /**
-     * to create required directory for serialized files writing and to delete all the files there if it exists
-     */
+    /** to create required directory for serialized files writing and to delete all the files there if it exists: */
     // (тут наверчено булиня, просто, чтобы поупражняться, можно было бы void):
     private boolean fileDealer(File dir) {
         this.dir = dir;
@@ -64,9 +58,7 @@ public class Serializator implements Runnable {
         }
     }
 
-    /**
-     * to serialize results of the race in run()
-     */
+    /** to serialize results of the race in run(): */
     @Override
     public void run() { //TODO: стереть все выводы в консоль
         if (fileDealer(dir)) {
@@ -92,27 +84,23 @@ public class Serializator implements Runnable {
      */
     public void go(ArrayList<Vehicle> carList) {
         this.carList = carList;
-//        ArrayList<Vehicle> newCarList = (ArrayList<Vehicle>)carList.clone();
-        Thread[] pool = new Thread[carList.size()];
-//        for (counter = (carList.size() - 1); counter >= 0; counter--)
+        ExecutorService executor = Executors.newCachedThreadPool();
         for (counter = 0; counter < carList.size(); counter++) {
-            pool[counter] = new Thread(new Serializator(carList, counter), "Thread " + String.valueOf(counter));
-//                pool[counter].start();
+            Thread thread = new Thread(new Serializator(carList, counter), "Thread " + String.valueOf(counter));
+            executor.execute(thread);
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        startThreads(pool);
-//        try { // join() ничего нового не добавляет, видимо, потоки успевают завершиться раньше
-//            for (counter = 0; counter < carList.size(); counter++) {
-//                pool[counter].join();
-//            }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        executor.shutdown();
     }
 
-    private static void startThreads(Thread[] threads) {
-        for (Thread t : threads)
-            t.start();
-    }
+//    private static void startThreads(Thread[] threads) { // rejected
+//        for (Thread t : threads)
+//            t.start();
+//    }
 
 
     // TODO: потом уничтожить main
