@@ -1,13 +1,18 @@
 package cars;
 
+
+import entities.CarModel;
+
+import java.io.Serializable;
+
 /**
  * Created by Ежище on 04.05.2016.
  */
-public class Vehicle {
+public class Vehicle implements Serializable {
     /**
      * the length of each straight segment, m:
      */
-    final static int spacing = 2000;
+    final static int SPACING = 2000;
     /* name of the car **/
     private String name;
     /* marker to get typr of the car if it's necessary **/
@@ -25,7 +30,7 @@ public class Vehicle {
      */
     private double mobility;
     /**
-     * registered time of the hole race:
+     * registered time of the whole race:
      */
     private double registeredTime = 0;
     /**
@@ -44,8 +49,24 @@ public class Vehicle {
      * переменная для того, чтобы гневно ругаться при неправильно введенных исходниках:
      */
     private boolean checkParameters = false;
+    /**
+     * car average speed of the whole race, km/h:
+     */
+    private double averageSpeed;
 
-    public Vehicle(){};
+
+    public Vehicle() {
+    }
+
+    ;
+
+    public Vehicle(CarModel carModel) {
+        setName(carModel.name);
+        setMarker(carModel.marker);
+        setAcceleration(carModel.acceleration);
+        setFullSpeed(carModel.fullSpeed);
+        setMobility(carModel.mobility);
+    }
 
     public Vehicle(String name, String marker, double acceleration, double fullSpeed, double mobility) {
         setName(name);
@@ -58,15 +79,12 @@ public class Vehicle {
     }
 
     public void setName(String name) {
-        try {
-            if (name != null)
-                this.name = name;
-            else {
-                checkParameters = true;
-                System.out.println("Не введено имя автомобиля класса " + getMarker() + ".");
-                throw new Exception();
-            }
-        } catch (Exception e) {}
+        if (name != null)
+            this.name = name;
+        else {
+            checkParameters = true;
+            System.out.println("Не введено имя автомобиля класса " + getMarker() + ".");
+        }
     }
 
     public void setMarker(String marker) {
@@ -74,40 +92,44 @@ public class Vehicle {
     }
 
     public void setAcceleration(double acceleration) {
-        try {
-            if (acceleration > 0)
-                this.acceleration = acceleration;
-            else {
-                checkParameters = true;
-                System.out.println("Автомобиль " + name + ": ускорение должно быть больше 0: ошибка ввода.");
-                throw new Exception();
-            }
-        } catch (Exception e) {}
+//        try {
+        if (acceleration > 0)
+            this.acceleration = acceleration;
+        else {
+            checkParameters = true;
+            System.out.printf("Автомобиль %s: ускорение должно быть больше 0: ошибка ввода.\n", name);
+//                throw new Exception();
+        }
+//        } catch (Exception e) {}
     }
 
     public void setFullSpeed(double fullSpeed) {
-        try {
-            if (fullSpeed > 0)
-                this.fullSpeed = fullSpeed;
-            else {
-                checkParameters = true;
-                System.out.println("Автомобиль " + name + ": максимальная скорость должна быть больше 0: ошибка ввода.");
-                throw new Exception();
-            }
-        } catch (Exception e) {}
+        if (fullSpeed > 0)
+            this.fullSpeed = fullSpeed;
+        else {
+            checkParameters = true;
+            System.out.printf("Автомобиль %s: максимальная скорость должна быть больше 0: ошибка ввода.\n", name);
+        }
     }
 
     public void setMobility(double mobility) {
-        try {
-            if (1 >= mobility && mobility >= 0)
-                this.mobility = mobility;
-            else {
-                checkParameters = true;
-                System.out.println("Автомобиль " + name + ": коэффициент потери скорости \"маневренность\" " +
-                        "указывается в пределах от 0 до 1: ошибка ввода.");
-                throw new Exception();
-            }
-        } catch (Exception e) {}
+        if (1 >= mobility && mobility > 0)
+            this.mobility = mobility;
+        else {
+            checkParameters = true;
+            System.out.printf("Автомобиль %s: коэффициент потери скорости \"маневренность\" " +
+                    "указывается в пределах больше 0 до 1: ошибка ввода.\n", name);
+        }
+    }
+
+    // Метод для обнуления аргументов конструктора без ругательств со стороны сеттеров (нужен в InitialDataScannerSystemIn):
+    //TODO: check if I need it
+    public void setNullConstructorArguments() {
+        name = null;
+        marker = null;
+        acceleration = 0;
+        fullSpeed = 0;
+        mobility = 0;
     }
 
     public void setRegisteredTime(double registeredTime) {
@@ -116,7 +138,7 @@ public class Vehicle {
 
     public void setDirectSegmentTime(double directSegmentTime) {
         this.directSegmentTime = directSegmentTime;
-    }
+    }//TODO: check if I use it somewhere
 
     public void setInitialSpeed(double initialSpeed) {
         this.initialSpeed = initialSpeed;
@@ -124,11 +146,11 @@ public class Vehicle {
 
     public void setTerminalSpeed(double terminalSpeed) {
         this.terminalSpeed = terminalSpeed;
-    }
+    }//TODO: check if I use it somewhere
 
     public void setCheckParameters(boolean checkParameters) {
         this.checkParameters = checkParameters;
-    }
+    }//TODO: check if I use it somewhere
 
     public String getName() {
         return name;
@@ -160,7 +182,7 @@ public class Vehicle {
 
     public double getInitialSpeed() {
         return initialSpeed;
-    }
+    } //TODO: check if I use it somewhere
 
     public double getTerminalSpeed() {
         return terminalSpeed;
@@ -168,6 +190,10 @@ public class Vehicle {
 
     public boolean isCheckParameters() {
         return checkParameters;
+    }
+
+    public double getAverageSpeed() {
+        return averageSpeed = 20 * 3.6 * SPACING / registeredTime;
     }
 
 
@@ -182,10 +208,10 @@ public class Vehicle {
         double spacingX;// m
 
         // вычисляем время прохождения прямого участка пути по физической формуле: s = a*t^2/2+v0*t;
-        // в терминах задачи это: acceleration * timeFull^2 / 2 + initialSpeed * timeFull - spacing = 0;
+        // в терминах задачи это: acceleration * timeFull^2 / 2 + initialSpeed * timeFull - SPACING = 0;
 
         /** double Discriminant = discriminant of the quadratic equation;*/
-        double Discriminant = Math.pow(initialSpeed, 2) - 4 * (acceleration / 2) * (-spacing);
+        double Discriminant = Math.pow(initialSpeed, 2) - 4 * (acceleration / 2) * (-SPACING);
         timeFull = (-initialSpeed + Math.pow(Discriminant, 0.5)) / acceleration;//(это формула положительного
         // корня кв.уравн.)
         /** Расчет скорости greatestPossibleSpeed и условие для fullSpeed: */
@@ -198,18 +224,18 @@ public class Vehicle {
             //из формулы spacingX = initialSpeed*tX+acceleration*tX^2/2:
             spacingX = initialSpeed * (fullSpeed / 3.6 - initialSpeed) / acceleration
                     + Math.pow((fullSpeed / 3.6 - initialSpeed), 2) / (2 * acceleration);
-            directSegmentTime = (fullSpeed / 3.6 - initialSpeed) / acceleration + (spacing - spacingX) / (fullSpeed / 3.6);
+            directSegmentTime = (fullSpeed / 3.6 - initialSpeed) / acceleration + (SPACING - spacingX) / (fullSpeed / 3.6);
             terminalSpeed = fullSpeed / 3.6;//Note: vTerminal = m/sec and fullSpeed = km/h.
         }
         return this;
     }
 
-    public static void main(String[] args) {
-        Vehicle v = new Vehicle("v", "V", 12, 500, 0.3);
-        v.goVehicle();
-        System.out.println(v.terminalSpeed);
-        v = new Vehicle(null, "cars.MashkaCar", 0, -5, 3);
-        v.goVehicle();
-        System.out.println(v.terminalSpeed);
-    }
+//    public static void main(String[] args) {
+//        Vehicle v = new Vehicle("v", "V", 12, 500, 0.3);
+//        v.goVehicle();
+//        System.out.println(v.terminalSpeed);
+//        v = new Vehicle(null, "cars.MashkaCar", 0, -5, 3);
+//        v.goVehicle();
+//        System.out.println(v.terminalSpeed);
+//    }
 }

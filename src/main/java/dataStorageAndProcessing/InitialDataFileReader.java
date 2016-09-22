@@ -6,23 +6,32 @@ import cars.MashkaCar;
 import cars.Vehicle;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by Ежище on 08.07.2016.
  */
-public class InitialDataFileReader {
-    /* Список, в котором будет храниться какое-то количество массивов со значениями аргументов, полученными из файла,
-     * а также, возможно, еще и дополнительно забитыми вручную пользователем: **/
-    public List<Vehicle> carsToRace = new ArrayList<>();
+public class InitialDataFileReader extends Vehicle {
 
-    public void readArgsFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src//main//resources//pilotProbesData//" +
-                "Probe4.txt"))) {
+    /* Список, в котором будет храниться какое-то количество массивов со значениями аргументов, полученными из файла,
+         * а также, возможно, еще и дополнительно забитыми вручную пользователем: **/
+//    private List<Vehicle> carsToRace = new ArrayList<>();
+//
+//    public List<Vehicle> getCarsToRace() {
+//        return carsToRace;
+//    }
+
+    private File file;
+
+    public InitialDataFileReader(File file) {this.file = file;}
+
+    public ArrayList<Vehicle> readArgsFromFile() {
+        ArrayList<Vehicle> carsToRace = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) { // "src//main//resources//pilotProbesData//Probe4.txt"
             /* переменная для записи прочитанной строки: **/
             String carFromFile; // это будет прочитанная строчка
             /* счетчик прочитанных строк: **/
@@ -54,25 +63,25 @@ public class InitialDataFileReader {
                     continue;
                 }
                 /* для игнорирования нулевых строчек: **/
-                if (oneLineArgs[1] == null)
+                if (oneLineArgs[0] == null)
                     continue;
                 /* теперь прогоняем созданный масив через switch, чтобы выяснить, к какому классу относится данная
                  * модель и забить аргументы в соответствующий объект-автомобиль, а затем заносим объект-автомобиль
                   *  в список carsToRace. При этом отлавливаем NumberFormatException на случай, если в последних
                   *  трех аргументах записаны не цифры (а также здесь отлавливается какое-то исключение насчет
                   *  неверной инициализации массива - не хватает элемента): **/
-                String name;
-                String marker;
-                double acceleration;
-                double fullSpeed;
-                double mobility;
+//                String name;
+//                String marker;
+//                double acceleration;
+//                double fullSpeed;
+//                double mobility;
 
                 try {
-                    name = oneLineArgs[0];
-                    marker = oneLineArgs[1];
-                    acceleration = Double.valueOf(oneLineArgs[2]);
-                    fullSpeed = Double.valueOf(oneLineArgs[3]);
-                    mobility = Double.valueOf(oneLineArgs[4]);
+                    setName(oneLineArgs[0]);
+                    setMarker(oneLineArgs[1]);
+                    setAcceleration(Double.valueOf(oneLineArgs[2]));
+                    setFullSpeed(Double.valueOf(oneLineArgs[3]));
+                    setMobility(Double.valueOf(oneLineArgs[4]));
                 } catch (Exception e) {
                     System.out.println("Параметры автомобиля " + oneLineArgs[0] + " объявлены в неверном формате " +
                             "или какие-то параметры отсутствуют. Автомобиль снят с гонки.");
@@ -80,25 +89,25 @@ public class InitialDataFileReader {
                 }
                 /* не забивать аргументы автомобиля, если какой-либо из double параметров равен 0 либо какой-либо из
                 параметров отсутствует: **/
-                if (acceleration <= 0 || fullSpeed <= 0 || mobility <= 0) {
+                if (getAcceleration() <= 0 || getFullSpeed() <= 0 || getMobility() <= 0) {
                     System.out.println("Параметры автомобиля " + oneLineArgs[0] + " объявлены неверно: один из " +
                             "числовых параметров равен 0 либо меньше 0. Автомобиль снят с гонки.");
                     continue;
                 }
-                if (mobility > 1) {
+                if (getMobility() > 1) {
                     System.out.println("Параметры автомобиля " + oneLineArgs[0] + " объявлены неверно: " +
                             "недопустимое значение параметра mobility. Автомобиль снят с гонки.");
                     continue;
                 }
-                switch (marker) {
+                switch (getMarker()) {
                     case "cars.MashkaCar":
-                        carsToRace.add(i, new MashkaCar(name, marker, acceleration, fullSpeed, mobility));
+                        carsToRace.add(i, new MashkaCar(getName(), getMarker(), getAcceleration(), getFullSpeed(), getMobility()));
                         break;
                     case "cars.BmwCar":
-                        carsToRace.add(i, new BmwCar(name, marker, acceleration, fullSpeed, mobility));
+                        carsToRace.add(i, new BmwCar(getName(), getMarker(), getAcceleration(), getFullSpeed(), getMobility()));
                         break;
                     case "cars.FerrariCar":
-                        carsToRace.add(i, new FerrariCar(name, marker, acceleration, fullSpeed, mobility));
+                        carsToRace.add(i, new FerrariCar(getName(), getMarker(), getAcceleration(), getFullSpeed(), getMobility()));
                         break;
                     /* В дефолте сообщение об ошибке маркера класса автомобиля **/
                     default:
@@ -111,19 +120,19 @@ public class InitialDataFileReader {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return carsToRace;
     }
 
 
     public static void main(String[] args) {
-        InitialDataFileReader gsa = new InitialDataFileReader();
-        gsa.readArgsFromFile();
+        InitialDataFileReader gsa = new InitialDataFileReader(new File("src//main//resources//pilotProbesData//Probe4.txt"));
+        ArrayList<Vehicle> proba = gsa.readArgsFromFile();
         int y = 0;
-        System.out.println(gsa.carsToRace.size());
-        while (y < gsa.carsToRace.size()) {
-            System.out.println("acceleration of car " + y + " " + gsa.carsToRace.get(y).getName() + " = " +
-                    gsa.carsToRace.get(y).getAcceleration());
+        System.out.println(proba.size());
+        while (y < proba.size()) {
+            System.out.println("acceleration of car " + y + " " + proba.get(y).getName() + " = " +
+                    proba.get(y).getAcceleration());
             y++;
         }
-
     }
 }
